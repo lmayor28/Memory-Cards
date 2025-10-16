@@ -1,11 +1,16 @@
-<script setup></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
-</template>
+  <header>
+    <router-link to="/">Inicio</router-link>
+    <router-link to="/juego">Jugar</router-link>
+    <router-link to="/estadisticas">Estadísticas</router-link>
+    <router-link to="/mejores-puntajes">Puntajes</router-link>
+  </header>
 
-<style scoped></style>
+  <main>
+    <router-view />
+  </main>
+
+  <footer>
+    <small>Memory Game © 2025</small>
+  </footer>
+</template>
