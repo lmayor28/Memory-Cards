@@ -7,7 +7,11 @@ import NotFoundView from '../views/NotFoundView.vue'
 const routes = [
   { path: '/', component: HomeView },
   { path: '/juego', component: GameView },
-  { path: '/puntajes', component: ScoreView },
+  { path: '/puntajes', component: StatsView },
+  { path: '/mejor-puntaje', component: BestScoreView },
+  { path: '/cartas', component: CardsView },
+  { path: '/agregar-carta', component: AddCardView },
+  { path: '/iniciar-sesion', component: LoginView },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundView }
 ]
 
