@@ -1,5 +1,5 @@
 <template>
-     <CNavbar />
+    <CNavbar />
   <main>
     <router-view />
   </main>
@@ -38,24 +38,24 @@ export default {
     },
 
     agregarCarta(nuevaCarta) {
-      const id = nuevaCarta.id ?? Date.now(); 
+      const id = nuevaCarta.id ?? Date.now();
       const cartaFinal = { ...this.cartaTemplate, ...nuevaCarta, id };
       this.cartas.push(cartaFinal);
-      this.guardarCartas(); 
+      this.guardarCartas();
     },
 
-  
+
     eliminarCarta(idCarta) {
       this.cartas = this.cartas.filter(c => c.id !== idCarta);
       this.guardarCartas();
     },
 
-    
+
     voltearCarta(idCarta) {
       const carta = this.cartas.find(c => c.id === idCarta);
       if (carta) {
         carta.bocaArriba = !carta.bocaArriba;
-        this.guardarCartas(); 
+        this.guardarCartas();
       }
     }
   }
