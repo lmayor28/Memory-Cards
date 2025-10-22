@@ -75,6 +75,7 @@
         padding: 25px 40px;
         background-color: var(--celeste-primario, #B3E5FC);
         border-radius: 30px;
+        border: 4px solid var(--celeste-oscuro, #255569);
         box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s ease;
       }
