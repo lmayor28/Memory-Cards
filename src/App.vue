@@ -1,7 +1,8 @@
 <template>
-  <!-- Barra de navegación -->
+  <!-- 🔹 Barra de navegación superior -->
   <header class="header">
     <div class="left">
+      <!-- 🔸 Enlaces principales -->
       <router-link to="/">🏠 Inicio</router-link>
       <router-link to="/juego">🎮 Jugar</router-link>
       <router-link to="/estadisticas">📊 Estadísticas</router-link>
@@ -9,25 +10,25 @@
     </div>
 
     <div class="right">
-      <!-- Si hay usuario logueado -->
+      <!-- 🔸 Si hay usuario logueado -->
       <template v-if="usuarioActual">
-        <span class="usuario">👤 {{ usuarioActual }}</span>
+        <span class="usuario">👤 {{ usuarioActual.nombreUsuario }}</span>
         <button class="logout" @click="cerrarSesion">Cerrar sesión</button>
       </template>
 
-      <!-- Si no hay usuario -->
+      <!-- 🔸 Si NO hay usuario logueado -->
       <template v-else>
         <router-link to="/iniciar-sesion" class="login-btn">Iniciar sesión</router-link>
       </template>
     </div>
   </header>
 
-  <!-- Contenido principal -->
+  <!-- 🔹 Contenido principal -->
   <main>
     <router-view />
   </main>
 
-  <!-- Footer -->
+  <!-- 🔹 Footer global -->
   <CFooter />
 </template>
 
@@ -40,61 +41,124 @@ export default {
 
   data() {
     return {
-      usuario: { nombre: '', apellido: '' },
-
-      cartas: JSON.parse(localStorage.getItem('cartas')) || [],
-
-      cartaTemplate: {
-        id: null,
-        nombre: '',
-        descripcion: '',
-        imagen: '',
-        bocaArriba: true
+      // ==============================
+      // 🧑‍💻 USUARIO (estructura del pizarrón)
+      // ==============================
+      usuario: {
+        id: Date.now(),            // ID único generado al crear usuario
+        nombre: '',                // Nombre real
+        apellido: '',              // Apellido
+        nombreUsuario: '',         // Nombre de usuario (único)
+        email: '',                 // Correo
+        contraseña: '',            // Contraseña
+        cartas: [],                // Lista de cartas del usuario (si se quiere personalizar)
+        partidas: []               // Historial de partidas del usuario
       },
 
-      usuarioActual: localStorage.getItem('usuario') || ''
+      // ==============================
+      // 🃏 CARTAS
+      // ==============================
+      cartas: JSON.parse(localStorage.getItem('cartas')) || [],
+
+      // Plantilla base de carta (según el pizarrón)
+      cartaTemplate: {
+        id: null,                  // ID único
+        nombre: '',                // Nombre de la carta
+        descripcion: '',           // Descripción
+        imagen: '',                // URL de imagen
+        isHide: true,              // Si está boca abajo
+        isCopied: false            // Si ya fue emparejada
+      },
+
+      // ==============================
+      // 🎮 PARTIDAS
+      // ==============================
+      partidaTemplate: {
+        id: null,                  // ID único
+        puntuacion: 0,             // Puntaje
+        fechaInicio: '',           // Fecha
+        tiempoFinal: '',           // Tiempo de juego
+        aciertos: 0.0              // Porcentaje o número de aciertos
+      },
+
+      // ==============================
+      // 👤 USUARIO ACTUAL (logueado)
+      // ==============================
+      usuarioActual: JSON.parse(localStorage.getItem('usuario')) || null
     }
   },
 
   methods: {
-    // 🔹 Gestiona las cartas
+    // ===================================================
+    // 🔹 GESTIÓN DE CARTAS
+    // ===================================================
+
     guardarCartas() {
       localStorage.setItem('cartas', JSON.stringify(this.cartas))
     },
+
     agregarCarta(nuevaCarta) {
       const id = nuevaCarta.id ?? Date.now()
       const cartaFinal = { ...this.cartaTemplate, ...nuevaCarta, id }
       this.cartas.push(cartaFinal)
       this.guardarCartas()
     },
+
     eliminarCarta(idCarta) {
       this.cartas = this.cartas.filter(c => c.id !== idCarta)
       this.guardarCartas()
     },
+
     voltearCarta(idCarta) {
       const carta = this.cartas.find(c => c.id === idCarta)
       if (carta) {
-        carta.bocaArriba = !carta.bocaArriba
+        carta.isHide = !carta.isHide   // 🔸 Se usa isHide en lugar de bocaArriba
         this.guardarCartas()
       }
     },
 
-    // 🔹 Sistema de usuario
+    // ===================================================
+    // 🔹 GESTIÓN DE USUARIOS
+    // ===================================================
+
+    // Cierra la sesión actual
     cerrarSesion() {
       localStorage.removeItem('usuario')
-      this.usuarioActual = ''
+      this.usuarioActual = null
       this.$router.push('/')
+    },
+
+    // Guarda un usuario nuevo o actualizado
+    guardarUsuario(usuario) {
+      this.usuarioActual = usuario
+      localStorage.setItem('usuario', JSON.stringify(usuario))
+    },
+
+    // Agrega una partida al usuario actual
+    agregarPartida(nuevaPartida) {
+      if (!this.usuarioActual) return
+      const partidaConId = { ...this.partidaTemplate, ...nuevaPartida, id: Date.now() }
+
+      this.usuarioActual.partidas.push(partidaConId)
+      localStorage.setItem('usuario', JSON.stringify(this.usuarioActual))
     }
   },
 
-  // 🔹 Cuando la app carga, revisa si hay usuario logueado
+  // ===================================================
+  // 🔹 CICLO DE VIDA
+  // ===================================================
   mounted() {
-    this.usuarioActual = localStorage.getItem('usuario') || ''
+    // Revisa si hay usuario guardado en el localStorage al iniciar la app
+    const usuarioGuardado = JSON.parse(localStorage.getItem('usuario'))
+    if (usuarioGuardado) {
+      this.usuarioActual = usuarioGuardado
+    }
   }
 }
 </script>
 
 <style scoped>
+/* 🔹 Estilos del header */
 .header {
   display: flex;
   justify-content: space-between;
