@@ -5,7 +5,7 @@
     <div v-if="ranking.length > 0">
       <ol>
         <li v-for="(jugador, i) in ranking" :key="i">
-          {{ jugador.usuario }} — {{ jugador.aciertos }} aciertos ({{ jugador.tiempo }}s)
+          {{ jugador.usuario.nombreusuario }} — {{ jugador.aciertos }} aciertos ({{ jugador.tiempo }}s)
         </li>
       </ol>
     </div>

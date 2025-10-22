@@ -1,7 +1,7 @@
 <template>
   <div class="game">
     <h1>🎮 Juego de Memoria</h1>
-    <p>Jugador: {{ usuario }}</p>
+    <p>Jugador: {{ usuario.nombreusuario }}</p>
     <p>Tiempo: {{ tiempo }}s | Aciertos: {{ aciertos }}</p>
 
     <!-- Tablero (rocio implementa las cartas) -->

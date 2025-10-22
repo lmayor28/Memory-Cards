@@ -16,17 +16,17 @@
 
 <style>
     :root {
-        --celeste-primario: #B3E5FC; 
+        --celeste-primario: #B3E5FC;
         --blanco: #FFFFFF;
-        --celeste-contraste: #03A9F4;  
+        --celeste-contraste: #03A9F4;
         --celeste-oscuro: #255569;
     }
 
     .not-found {
-         display: flex;
+        display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center; 
+        align-items: center;
         height: 100vh;
         background-color: #b9edff;
         text-align: center;
@@ -51,7 +51,7 @@
         margin-bottom: 30px;
     }
     .not-found button {
-         display: inline-block;
+        display: inline-block;
         padding: 10px 40px;
         background-color: var(--celeste-contraste, #03A9F4);
         color: var(--blanco, #FFFFFF);
