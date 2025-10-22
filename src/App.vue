@@ -1,10 +1,24 @@
 <template>
-  <CNavbar />
+  <CNavbar :usuario="usuarioActual" @cerrar-sesion="cerrarSesion" />
   <main>
-    <router-view />
-  </main>
+    <router-view v-slot="{ Component }">
+      <component
+        :is="Component"
 
-  <!-- 🔹 Footer global -->
+
+        :usuarioActual="usuarioActual"
+        :cartas="cartas"
+        :usuarios="allUsers"
+
+
+        @login-exitoso="manejarLoginExitoso"
+        @registrar-usuario="registrarNuevoUsuario"
+        @agregar-carta="agregarCarta"
+        @eliminar-carta="eliminarCarta"
+        @agregar-partida="agregarPartida"
+      />
+    </router-view>
+  </main>
   <CFooter />
 </template>
 
@@ -18,175 +32,199 @@ export default {
 
   data() {
     return {
-      // ==============================
-      // 🧑‍💻 USUARIO (estructura del pizarrón)
-      // ==============================
-      usuario: {
-        id: Date.now(),            // ID único generado al crear usuario
-        nombre: '',                // Nombre real
-        apellido: '',              // Apellido
-        nombreUsuario: '',         // Nombre de usuario (único)
-        email: '',                 // Correo
-        contraseña: '',            // Contraseña
-        cartas: [],                // Lista de cartas del usuario (si se quiere personalizar)
-        partidas: []               // Historial de partidas del usuario
-      },
+      // Plantillas
+      cartaTemplate: { id: null, nombre: '', descripcion: '', imagen: '', isHide: true, isCopied: false },
+      partidaTemplate: { id: null, puntuacion: 0, fechaInicio: '', tiempoFinal: '', aciertos: 0.0 },
 
-      // ==============================
-      // 🃏 CARTAS
-      // ==============================
-      cartas: JSON.parse(localStorage.getItem('cartas')) || [],
-
-      // Plantilla base de carta (según el pizarrón)
-      cartaTemplate: {
-        id: null,                  // ID único
-        nombre: '',                // Nombre de la carta
-        descripcion: '',           // Descripción
-        imagen: '',                // URL de imagen
-        isHide: true,              // Si está boca abajo
-        isCopied: false            // Si ya fue emparejada
-      },
-
-      // ==============================
-      // 🎮 PARTIDAS
-      // ==============================
-      partidaTemplate: {
-        id: null,                  // ID único
-        puntuacion: 0,             // Puntaje
-        fechaInicio: '',           // Fecha
-        tiempoFinal: '',           // Tiempo de juego
-        aciertos: 0.0              // Porcentaje o número de aciertos
-      },
-
-      // ==============================
-      // 👤 USUARIO ACTUAL (logueado)
-      // ==============================
-      usuarioActual: JSON.parse(localStorage.getItem('usuario')) || null
+      // Estado central
+      usuarioActual: null,
+      cartas: [],
+      allUsers: []
     }
   },
 
   methods: {
     // ===================================================
-    // 🔹 GESTIÓN DE CARTAS
+    // 🔹 Métodos de Persistencia
     // ===================================================
-
-    guardarCartas() {
-      localStorage.setItem('cartas', JSON.stringify(this.cartas))
+    guardarListaUsuarios() {
+      localStorage.setItem('usuarios', JSON.stringify(this.allUsers));
     },
-
-    agregarCarta(nuevaCarta) {
-      const id = nuevaCarta.id ?? Date.now()
-      const cartaFinal = { ...this.cartaTemplate, ...nuevaCarta, id }
-      this.cartas.push(cartaFinal)
-      this.guardarCartas()
+    cargarListaUsuarios() {
+      this.allUsers = JSON.parse(localStorage.getItem('usuarios')) || [];
     },
-
-    eliminarCarta(idCarta) {
-      this.cartas = this.cartas.filter(c => c.id !== idCarta)
-      this.guardarCartas()
+    guardarSesionUsuarioActual() {
+      if (this.usuarioActual) {
+        localStorage.setItem('usuario', JSON.stringify(this.usuarioActual));
+      } else {
+        localStorage.removeItem('usuario');
+      }
     },
-
-    voltearCarta(idCarta) {
-      const carta = this.cartas.find(c => c.id === idCarta)
-      if (carta) {
-        carta.isHide = !carta.isHide   // 🔸 Se usa isHide en lugar de bocaArriba
-        this.guardarCartas()
+    cargarSesionUsuarioActual() {
+      const usuarioGuardado = JSON.parse(localStorage.getItem('usuario'));
+      if (usuarioGuardado) {
+        this.usuarioActual = usuarioGuardado;
+        this.cartas = usuarioGuardado.cartas || [];
+      } else {
+        this.usuarioActual = null;
+        this.cartas = [];
       }
     },
 
     // ===================================================
-    // 🔹 GESTIÓN DE USUARIOS
+    // 🔹 GESTIÓN DE ESTADO (Login/Registro/Logout)
     // ===================================================
 
-    // Cierra la sesión actual
+    // Se llama cuando LoginView emite @login-exitoso
+    manejarLoginExitoso(usuario) {
+      // Lo busca en la lista interna por si acaso necesita actualizarse
+      const userInList = this.allUsers.find(u => u.id === usuario.id);
+      if (userInList) {
+         // Asegura que usuarioActual es la versión más reciente de la lista
+        this.usuarioActual = { ...userInList };
+      } else {
+         // Esto no debería pasar en login, pero por seguridad
+        this.usuarioActual = usuario;
+      }
+
+      this.cartas = this.usuarioActual.cartas || [];
+      this.guardarSesionUsuarioActual(); // Guarda solo la sesión activa
+
+      // No es necesario guardar allUsers aquí, ya está actualizado
+
+      this.$router.push('/');
+    },
+
+    // 🔸 NUEVO: Se llama cuando LoginView emite @registrar-usuario
+    registrarNuevoUsuario(datosNuevoUsuario) {
+       // Verificamos de nuevo por si acaso (aunque LoginView ya lo hizo)
+      const existe = this.allUsers.find(
+        (u) => u.nombreUsuario === datosNuevoUsuario.nombreUsuario || u.email === datosNuevoUsuario.email
+      );
+      if (existe) {
+         // Podríamos manejar un error aquí si quisiéramos, pero LoginView ya lo hace
+        console.error("Intento de registrar usuario duplicado manejado por App.vue");
+        return; // No hacemos nada si ya existe
+      }
+
+       // Creamos el objeto completo del usuario
+      const nuevoUsuario = {
+        ...datosNuevoUsuario, // Datos del formulario
+        id: Date.now(),
+        cartas: [],
+        partidas: []
+      };
+
+      this.allUsers.push(nuevoUsuario); // Lo añadimos a la lista interna
+      this.guardarListaUsuarios();      // Guardamos la lista actualizada en localStorage
+
+       // Iniciamos sesión automáticamente con el nuevo usuario
+      this.manejarLoginExitoso(nuevoUsuario);
+    },
+
+    // Se llama desde CNavbar
     cerrarSesion() {
-      localStorage.removeItem('usuario')
-      this.usuarioActual = null
-      this.$router.push('/')
+      this.usuarioActual = null;
+      this.cartas = [];
+      this.guardarSesionUsuarioActual(); // Borra la sesión de localStorage
+      this.$router.push('/');
     },
 
-    // Guarda un usuario nuevo o actualizado
-    guardarUsuario(usuario) {
-      this.usuarioActual = usuario
-      localStorage.setItem('usuario', JSON.stringify(usuario))
+    // ===================================================
+    // 🔹 GESTIÓN DE DATOS (Centralizada y Persistida)
+    // ===================================================
+
+    // Método interno para actualizar al usuario actual y persistir TODO
+    actualizarYGuardarUsuarioActual() {
+      if (!this.usuarioActual) return;
+
+      // 1. Sincronizar 'cartas' locales con el objeto 'usuarioActual'
+      this.usuarioActual.cartas = this.cartas;
+
+      // 2. Actualizar la copia de este usuario en la lista 'allUsers'
+      const userIndex = this.allUsers.findIndex(u => u.id === this.usuarioActual.id);
+      if (userIndex !== -1) {
+        // Usamos una copia para asegurar reactividad si fuera necesario
+        this.allUsers[userIndex] = { ...this.usuarioActual };
+      } else {
+         // Esto sería raro, pero si no está en la lista, lo agregamos
+        this.allUsers.push({ ...this.usuarioActual });
+      }
+
+      // 3. Persistir AMBOS: la sesión y la lista completa
+      this.guardarSesionUsuarioActual();
+      this.guardarListaUsuarios();
     },
 
-    // Agrega una partida al usuario actual
+    // Se llama cuando AddCardView emite @agregar-carta
+    agregarCarta(nuevaCarta) {
+      if (!this.usuarioActual) return;
+      const id = nuevaCarta.id ?? Date.now();
+      const cartaFinal = { ...this.cartaTemplate, ...nuevaCarta, id };
+      this.cartas.push(cartaFinal); // Modifica estado local
+      this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
+    },
+
+    // Se llama cuando CardsView emite @eliminar-carta
+    eliminarCarta(idCarta) {
+      if (!this.usuarioActual) return;
+      this.cartas = this.cartas.filter(c => c.id !== idCarta); // Modifica estado local
+      this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
+    },
+
+    // Se llama cuando GameView emite @agregar-partida
     agregarPartida(nuevaPartida) {
-      if (!this.usuarioActual) return
-      const partidaConId = { ...this.partidaTemplate, ...nuevaPartida, id: Date.now() }
+      if (!this.usuarioActual) return;
+      const partidaConId = { ...this.partidaTemplate, ...nuevaPartida, id: Date.now() };
 
-      this.usuarioActual.partidas.push(partidaConId)
-      localStorage.setItem('usuario', JSON.stringify(this.usuarioActual))
-    }
+      if (!this.usuarioActual.partidas) {
+        this.usuarioActual.partidas = [];
+      }
+      this.usuarioActual.partidas.push(partidaConId); // Modifica directo el objeto
+      this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
+    },
   },
 
-  // ===================================================
-  // 🔹 CICLO DE VIDA
-  // ===================================================
   mounted() {
-    // Revisa si hay usuario guardado en el localStorage al iniciar la app
-    const usuarioGuardado = JSON.parse(localStorage.getItem('usuario'))
-    if (usuarioGuardado) {
-      this.usuarioActual = usuarioGuardado
-    }
+    this.cargarListaUsuarios();         // Carga la lista completa de usuarios al iniciar
+    this.cargarSesionUsuarioActual(); // Carga la sesión del usuario si existe
   }
 }
 </script>
 
 <style scoped>
-/* 🔹 Estilos del header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #03a9f4;
-  color: white;
-  padding: 10px 20px;
-}
-
-.header a {
-  color: white;
-  text-decoration: none;
-  margin: 0 10px;
-  font-weight: bold;
-}
-
-.header a:hover {
-  text-decoration: underline;
-}
-
-.right {
-  display: flex;
-  align-items: center;
-}
-
-.usuario {
-  margin-right: 15px;
-  font-weight: bold;
-}
-
-.logout {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.logout:hover {
-  background-color: #d32f2f;
-}
-
-.login-btn {
-  background-color: #0288d1;
-  padding: 6px 12px;
-  border-radius: 6px;
-}
-
-.login-btn:hover {
-  background-color: #0277bd;
-}
+/* (Estilos se mantienen) */
 </style>
+
+<!-- Resumen de Eventos (@) y Payloads Esperados por App.vue
+
+1. @login-exitosoEmitido por: LoginView.vue (cuando el login es correcto).Payload esperado: El objeto completo del usuario que ha iniciado sesión, tal como se encontró en la lista usuarios.Tipo: ObjectEjemplo:{
+  "id": 1678886400000,
+  "nombre": "Ana",
+  "apellido": "Gomez",
+  "nombreUsuario": "anag",
+  "email": "ana@correo.com",
+  "contraseña": "password456",
+  "cartas": [ { "id": 1, "nombre": "Carta Sol", ... }, ... ],
+  "partidas": [ { "id": 101, "puntuacion": 150, ... }, ... ]
+}
+2. @registrar-usuarioEmitido por: LoginView.vue (cuando se intenta registrar un nuevo usuario y no existe previamente).Payload esperado: Un objeto que contiene solo los datos del formulario necesarios para crear un nuevo usuario. App.vue se encargará de añadir el id, y los arrays vacíos cartas y partidas.Tipo: ObjectEjemplo:{
+  "nombre": "Carlos",
+  "apellido": "Ruiz",
+  "nombreUsuario": "carlosr",
+  "email": "carlos@correo.com",
+  "contraseña": "password789"
+}
+3. @agregar-cartaEmitido por: AddCardView.vue (cuando se envía el formulario para añadir una nueva carta).Payload esperado: Un objeto con los datos de la nueva carta ingresados por el usuario. App.vue le asignará un id y completará la estructura si es necesario.Tipo: ObjectEjemplo:{
+  "nombre": "Carta Luna",
+  "descripcion": "Representa la noche.",
+  "imagen": "[https://url-de-imagen.com/luna.png](https://url-de-imagen.com/luna.png)"
+}
+4. @eliminar-cartaEmitido por: CardsView.vue (generalmente, después de que ObjectCard.vue emita su propio evento de eliminar).Payload esperado: El ID de la carta que se desea eliminar.Tipo: Number o String (depende de cómo generes los IDs)Ejemplo: 1678886400123 o "carta-abc"5. @agregar-partidaEmitido por: GameView.vue (cuando una partida finaliza).Payload esperado: Un objeto con los detalles de la partida recién completada. App.vue le asignará un id.Tipo: ObjectEjemplo:{
+  "usuario": "anag", // Informativo, App.vue lo asocia al usuarioActual
+  "aciertos": 10,
+  "tiempo": 95, // en segundos
+  "fecha": "22/10/2025" // o el formato que uses
+  // Podrías añadir "puntuacion" si la calculas en GameView
+}
+6. @cerrar-sesionEmitido por: CNavbar.vue (cuando el usuario hace clic en el botón de cerrar sesión).Payload esperado: Ninguno. El evento solo notifica la intención de cerrar sesión.Tipo: undefinedAl implementar las vistas, asegúrate de que $emit envíe exactamente estos datos para que App.vue pueda procesarlos correctamente. -->
