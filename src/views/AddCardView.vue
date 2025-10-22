@@ -1,5 +1,5 @@
 <template>
-  <h1>Vista de añadir cartas</h1>
+  <h1>No implementado</h1>
 </template>
 
 <script>
