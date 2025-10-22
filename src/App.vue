@@ -1,29 +1,5 @@
 <template>
-  <!-- 🔹 Barra de navegación superior -->
-  <header class="header">
-    <div class="left">
-      <!-- 🔸 Enlaces principales -->
-      <router-link to="/">🏠 Inicio</router-link>
-      <router-link to="/juego">🎮 Jugar</router-link>
-      <router-link to="/estadisticas">📊 Estadísticas</router-link>
-      <router-link to="/mejor-puntaje">🏆 Puntajes</router-link>
-    </div>
-
-    <div class="right">
-      <!-- 🔸 Si hay usuario logueado -->
-      <template v-if="usuarioActual">
-        <span class="usuario">👤 {{ usuarioActual.nombreUsuario }}</span>
-        <button class="logout" @click="cerrarSesion">Cerrar sesión</button>
-      </template>
-
-      <!-- 🔸 Si NO hay usuario logueado -->
-      <template v-else>
-        <router-link to="/iniciar-sesion" class="login-btn">Iniciar sesión</router-link>
-      </template>
-    </div>
-  </header>
-
-  <!-- 🔹 Contenido principal -->
+  <CNavbar />
   <main>
     <router-view />
   </main>
@@ -34,10 +10,11 @@
 
 <script>
 import CFooter from './components/CFooter.vue'
+import CNavbar from './components/CNavbar.vue';
 
 export default {
   name: 'App',
-  components: { CFooter },
+  components: { CFooter, CNavbar },
 
   data() {
     return {
