@@ -1,7 +1,8 @@
 <template>
-  <div class="game">
+  <div class="juego">
     <h1>🎮 Juego de Memoria</h1>
-    <p>Jugador: {{ usuario.nombreusuario }}</p>
+    <p>🧩 Jugador: <strong>{{ usuarioActual?.nombreUsuario || 'Invitado' }}</strong>
+    </p>
     <p>Tiempo: {{ tiempo }}s | Aciertos: {{ aciertos }}</p>
 
     <!-- Tablero (rocio implementa las cartas) -->
@@ -20,6 +21,12 @@ export default {
     aciertos: {
       type: Number,
       default: 0
+    }
+  },
+  props: {
+    usuarioActual: {
+      type: Object,
+      default: null
     }
   },
   data() {

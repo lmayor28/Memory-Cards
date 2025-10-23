@@ -1,43 +1,59 @@
 <template>
   <div class="best-score">
-    <h1>🏆 Mejores Puntajes</h1>
+    <h1>🏆 Mejor Puntuación</h1>
 
-    <div v-if="ranking.length > 0">
-      <ol>
-        <li v-for="(jugador, i) in ranking" :key="i">
-          {{ jugador.usuario.nombreusuario }} — {{ jugador.aciertos }} aciertos ({{ jugador.tiempo }}s)
-        </li>
-      </ol>
+    <div v-if="!usuarioActual">
+      <p>🔒 Debes iniciar sesión para ver tu mejor puntaje.</p>
+      <router-link to="/iniciar-sesion">Iniciar Sesión</router-link>
     </div>
+
     <div v-else>
-      <p>No hay puntajes registrados todavía.</p>
-    </div>
+      <p>Jugador: <strong>{{ usuarioActual.nombreUsuario }}</strong></p>
 
-    <router-link to="/">Volver al inicio</router-link>
+      <div v-if="mejorPartida">
+        <p><strong>Puntuación:</strong> {{ mejorPartida.puntuacion }}</p>
+        <p><strong>Aciertos:</strong> {{ mejorPartida.aciertos }}</p>
+        <p><strong>Tiempo:</strong> {{ mejorPartida.tiempoFinal }} segundos</p>
+        <p><strong>Fecha:</strong> {{ mejorPartida.fechaInicio }}</p>
+      </div>
+      <div v-else>
+        <p>No tienes partidas registradas aún. ¡Juega una partida para ver tu mejor puntaje!</p>
+        <router-link to="/juego">🎮 Jugar ahora</router-link>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'BestScoreView',
-  data() {
-    return {
-      ranking: [],
+  name: "BestScoreView",
+  props: {
+    usuarioActual: {
+      type: Object,
+      default: null
     }
   },
-  created() {
-    const partidas = JSON.parse(localStorage.getItem('partidas') || '[]')
-    this.ranking = partidas.sort((a, b) => a.tiempo - b.tiempo).slice(0, 10)
-  },
+  computed: {
+    mejorPartida() {
+      if (!this.usuarioActual || !this.usuarioActual.partidas?.length) return null
+      return [...this.usuarioActual.partidas].sort((a, b) => b.puntuacion - a.puntuacion)[0]
+    }
+  }
 }
 </script>
 
 <style scoped>
 .best-score {
   text-align: center;
+  margin: 40px auto;
+  background-color: #b3e5fc;
+  padding: 30px;
+  border-radius: 20px;
+  width: 80%;
 }
-ol {
-  text-align: left;
-  display: inline-block;
+a {
+  color: #0288d1;
+  text-decoration: none;
+  font-weight: bold;
 }
 </style>
