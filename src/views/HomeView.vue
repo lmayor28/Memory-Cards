@@ -35,6 +35,15 @@
 <script>
 export default {
   name: 'HomeView',
+  props: ['usuarioActual', 'cartas', 'usuarios'],
+  emits: [
+    'login-exitoso',
+    'registrar-usuario',
+    'agregar-carta',
+    'eliminar-carta',
+    'agregar-partida'
+  ],
+
   methods: {
     jugar() {
       const usuario = localStorage.getItem('usuario')
@@ -79,7 +88,7 @@ export default {
   padding: 10px 40px;
   background-color: var(--celeste-contraste, #03a9f4);
   color: var(--blanco, #ffffff);
-  border: none;
+  border: 1px solid var(--celeste-oscuro, #255569);
   border-radius: 10px;
   font-size: 1.2em;
   cursor: pointer;

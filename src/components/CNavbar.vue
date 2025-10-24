@@ -2,12 +2,12 @@
   <nav class="navbar">
     <!-- 🔹 Enlaces principales -->
     <div class="links">
-      <router-link to="/">🏠 Inicio</router-link>
-      <router-link to="/juego">🎮 Jugar</router-link>
-      <router-link to="/cartas">🃏 Cartas</router-link>
-      <router-link to="/estadisticas">📊 Estadísticas</router-link>
-      <router-link to="/mejor-puntaje">🏆 Puntajes</router-link>
-      <router-link to="/agregar-carta">➕ Agregar Cartas</router-link>
+      <router-link to="/">Inicio</router-link>
+      <router-link to="/juego">Jugar</router-link>
+      <router-link to="/cartas">Cartas</router-link>
+      <router-link to="/estadisticas">Estadísticas</router-link>
+      <router-link to="/mejor-puntaje">Puntajes</router-link>
+      <router-link to="/agregar-carta">Agregar Cartas</router-link>
     </div>
 
     <!-- 🔹 Estado del usuario -->
@@ -58,7 +58,7 @@ export default {
   --celeste-primario: #b3e5fc;
   --blanco: #ffffff;
   --celeste-contraste: #03a9f4;
-  --rojo: #f44336;
+  --rojo: #ff6b6b;
 }
 
 .navbar {
@@ -133,7 +133,7 @@ a.router-link-exact-active {
 }
 
 .logout:hover {
-  background-color: #d32f2f;
+  background-color: #ff4040;
 }
 
 .login-btn {

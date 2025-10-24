@@ -1,20 +1,11 @@
 <template>
   <div class="card">
-    <img 
-      :src="carta.imagen || 'https://via.placeholder.com/150'" 
-      :alt="carta.nombre || 'Carta sin nombre'" 
-      class="card-image"
-    />
-    <div class="card-info">
-      <p class="card-name">{{ carta.nombre || 'Sin nombre' }}</p>
+    <img v-if="carta.imagen" :src="carta.imagen" alt="Imagen de carta" class="card-img" />
+    <div class="card-body">
+      <h3 class="card-title">{{ carta.nombre || 'Carta sin nombre' }}</h3>
+      <p class="card-desc">{{ carta.descripcion || 'Sin descripción disponible.' }}</p>
 
-      <button 
-        v-if="$route.name === 'CardsView'" 
-        @click="$emit('eliminar', carta.id)"
-        class="delete-btn"
-      >
-        Eliminar
-      </button>
+      <button v-if="$route.name === 'cards'" class="btn-delete" @click.stop="$emit('eliminar', carta.id)"> X </button>
     </div>
   </div>
 </template>
@@ -33,55 +24,64 @@ export default {
 
 <style scoped>
 .card {
+  background-color: var(--blanco);
+  border: 3px solid var(--celeste-primario);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 220px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 180px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin: 10px;
-  cursor: pointer;
+  position: relative;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.card-image {
+.card-img {
   width: 100%;
-  height: 150px;
+  height: 160px;
   object-fit: cover;
+  border-bottom: 3px solid var(--celeste-primario);
 }
 
-.card-info {
-  padding: 10px;
+.card-body {
+  padding: 10px 14px;
   text-align: center;
 }
 
-.card-name {
-  font-size: 1.1em;
+.card-title {
   font-weight: 600;
-  color: #333;
-  margin: 5px 0 10px 0;
+  font-size: 1.1rem;
+  color: #0077b6;
+  margin-bottom: 6px;
 }
 
-.delete-btn {
-  background-color: #e63946;
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+.card-desc {
+  font-size: 0.9rem;
+  color: #444;
+  margin-bottom: 10px;
 }
 
-.delete-btn:hover {
-  background-color: #c51f2b;
-  transform: scale(1.05);
+.btn-delete { 
+  background-color: #ff6b6b; 
+  color: white; 
+  border: none; 
+  padding: 4px 8px; 
+  border-radius: 50%; 
+  cursor: pointer; 
+  font-size: 0.8rem; 
+  transition: background 0.2s ease; 
+  position: absolute; 
+  top: 6px; 
+   right: 6px; 
+  }
+
+.btn-delete:hover {
+  background-color: #ff4040;
 }
 </style>

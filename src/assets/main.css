@@ -1,3 +1,10 @@
 body{
     background-color: #fffbf3;
+    
+}
+:root {
+  --celeste-primario: #b3e5fc;
+  --blanco: #ffffff;
+  --celeste-contraste: #03a9f4;
+  --celeste-oscuro: #255569;
 }
