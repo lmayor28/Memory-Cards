@@ -14,6 +14,11 @@
       <p><strong>Tiempo:</strong> {{ tiempo }}s</p>
     </div>
 
+    <!-- 🧩 PARTE Leonel — Botón para finalizar manualmente -->
+    <div v-if="!juegoTerminado" class="finalizar">
+      <button @click="finalizarPartidaManualmente">🏁 Finalizar partida</button>
+    </div>
+
     <!-- 🃏 PARTE Rocio — Tablero de cartas (a completar) -->
     <div class="tablero">
       <!-- 🃏 generar las cartas dinámicamente con v-for -->
@@ -25,7 +30,7 @@
 
     <!-- 🧩 PARTE Leonel — Resultado final -->
     <div v-if="juegoTerminado" class="resultado">
-      <h2>🎉 ¡Ganaste!</h2>
+      <h2>🎉 ¡Partida finalizada!</h2>
       <p>Puntuación final: <strong>{{ puntuacionFinal }}</strong></p>
       <button @click="reiniciarJuego">🔁 Jugar otra vez</button>
     </div>
@@ -75,7 +80,7 @@ export default {
 
   methods: {
     /* ===========================================================
-      🧩 PARTE Leonel —  lógica (ya funcional)
+      🧩 PARTE Leonel — lógica (ya funcional)
     ============================================================ */
     iniciarJuego() {
       // 🔹 Reinicia contadores y estado
@@ -115,6 +120,13 @@ export default {
 
       // 🔹 Envía la partida al componente principal
       this.$emit("agregar-partida", nuevaPartida);
+    },
+
+    // 🧩 NUEVO — Botón “Finalizar partida”
+    finalizarPartidaManualmente() {
+      if (confirm("¿Seguro que deseas finalizar la partida actual?")) {
+        this.terminarJuego();
+      }
     },
 
     reiniciarJuego() {
@@ -158,6 +170,23 @@ export default {
   justify-content: center;
   gap: 20px;
   margin-bottom: 15px;
+}
+
+/* 🧩 Botón para finalizar manualmente */
+.finalizar {
+  margin-bottom: 15px;
+}
+.finalizar button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.finalizar button:hover {
+  background-color: #d32f2f;
 }
 
 /* 🃏 PARTE Rocio — Zona del tablero */

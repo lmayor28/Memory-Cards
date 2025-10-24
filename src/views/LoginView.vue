@@ -2,7 +2,7 @@
   <div class="login">
     <h1>🔐 Iniciar Sesión / Registrarse</h1>
 
-    <form @submit.prevent="manejarUsuario">
+    <form @submit ="manejarUsuario">
       <!-- Campos de datos -->
       <input v-model="usuario.nombreUsuario" type="text" placeholder="Nombre de usuario" required />
       <input v-model="usuario.contraseña" type="password" placeholder="Contraseña" required />
