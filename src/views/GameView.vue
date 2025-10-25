@@ -4,7 +4,7 @@
 
     <!-- 🧩 PARTE Leonel — Mostrar usuario actual -->
     <p class="jugador">
-      🧩 Jugador: <strong>{{ usuarioActual?.nombreUsuario || 'Invitado' }}</strong>
+      🧩 Jugador: <strong>{{ usuarioActual?.nombreUsuario || "Invitado" }}</strong>
     </p>
 
     <!-- 🧩 PARTE Leonel — Información del progreso -->
@@ -15,24 +15,33 @@
     </div>
 
     <!-- 🧩 PARTE Leonel — Botón para finalizar manualmente -->
-    <div v-if="!juegoTerminado" class="finalizar">
-      <button @click="finalizarPartidaManualmente">🏁 Finalizar partida</button>
+    <div v-if="!juegoTerminado" class="acciones">
+      <button class="btn-finalizar" @click="finalizarPartidaManualmente">
+        🏁 Finalizar partida
+      </button>
     </div>
 
-    <!-- 🃏 PARTE Rocio — Tablero de cartas (a completar) -->
+    <!-- 🃏 PARTE Rocio — Tablero del juego -->
     <div class="tablero">
-      <!-- 🃏 generar las cartas dinámicamente con v-for -->
-      <!-- Ejemplo: v-for="(carta, index) in cartasEnJuego" -->
-      <!-- y manejar los clics para voltear cartas -->
-      <!-- De momento mostramos un placeholder -->
-      <p>🃏 Aquí va el tablero de memoria (parte Rocio)</p>
+      <p v-if="!cartasEnJuego.length" class="placeholder">
+        🃏 Aquí irá el tablero de memoria (parte Rocío)
+      </p>
+      <!-- 🃏 EJEMPLO de cómo Rocío debe renderizar las cartas:
+      <div
+        v-for="(carta, index) in cartasEnJuego"
+        :key="index"
+        class="carta"
+        @click="voltearCarta(carta)"
+      >
+        {{ carta.volteada || carta.acertada ? carta.icono : "❓" }}
+      </div> -->
     </div>
 
     <!-- 🧩 PARTE Leonel — Resultado final -->
     <div v-if="juegoTerminado" class="resultado">
       <h2>🎉 ¡Partida finalizada!</h2>
       <p>Puntuación final: <strong>{{ puntuacionFinal }}</strong></p>
-      <button @click="reiniciarJuego">🔁 Jugar otra vez</button>
+      <button class="btn-reiniciar" @click="reiniciarJuego">🔁 Jugar otra vez</button>
     </div>
   </div>
 </template>
@@ -41,17 +50,21 @@
 export default {
   name: "GameView",
 
-  // 🧩 Recibe usuario actual desde App.vue
+  // 🧩 Recibe el usuario actual desde App.vue
   props: {
     usuarioActual: {
       type: Object,
       default: null
+    },
+    cartas: {
+      type: Array,
+      default: () => []
     }
   },
 
   data() {
     return {
-      // 🧩 Variables de la parte (Leonel)
+      // 🧩 PARTE Leonel — variables de control
       movimientos: 0,
       aciertos: 0,
       tiempo: 0,
@@ -59,7 +72,7 @@ export default {
       juegoTerminado: false,
       puntuacionFinal: 0,
 
-      // 🃏 Variables base que usará (Rocio)
+      // 🃏 PARTE Rocío — base de cartas
       cartasBase: [
         { icono: "🍎" },
         { icono: "🍌" },
@@ -68,48 +81,51 @@ export default {
         { icono: "🍓" },
         { icono: "🍉" }
       ],
-      cartasEnJuego: [], // Rocio generará las cartas duplicadas y mezcladas
-      cartaSeleccionada: null // Rocio controlará la carta en juego
+      cartasEnJuego: [],
+      cartaSeleccionada: null
     };
   },
 
   mounted() {
-    // 🧩 Inicializa el juego al cargar
     this.iniciarJuego();
   },
 
   methods: {
-    /* ===========================================================
-      🧩 PARTE Leonel — lógica (ya funcional)
-    ============================================================ */
+    /* ==========================================================
+      🧩 PARTE Leonel — lógica principal del juego
+    ========================================================== */
     iniciarJuego() {
-      // 🔹 Reinicia contadores y estado
+      // 🔹 Reinicia valores
       this.movimientos = 0;
       this.aciertos = 0;
+      this.tiempo = 0;
       this.juegoTerminado = false;
       this.puntuacionFinal = 0;
-      this.tiempo = 0;
 
-      // 🔹 Limpia el temporizador previo
+      // 🔹 Reinicia temporizador
       clearInterval(this.temporizador);
+      this.temporizador = setInterval(() => (this.tiempo++), 1000);
 
-      // 🔹 Inicia el cronómetro
-      this.temporizador = setInterval(() => {
-        this.tiempo++;
-      }, 1000);
-
-      // 🃏 Rocio genera el tablero aquí
-      // usando `this.generarCartas()` (función que debes crear)
+      // 🃏 Genera el tablero (si hay cartas del usuario)
+      if (this.cartas && this.cartas.length > 0) {
+        const duplicadas = [...this.cartas, ...this.cartas];
+        this.cartasEnJuego = duplicadas.sort(() => Math.random() - 0.5);
+      } else {
+        // Si no hay cartas personalizadas, usar las base
+        const duplicadas = [...this.cartasBase, ...this.cartasBase];
+        this.cartasEnJuego = duplicadas.sort(() => Math.random() - 0.5);
+      }
     },
 
+    // 🔸 Terminar partida (automática o manual)
     terminarJuego() {
       clearInterval(this.temporizador);
       this.juegoTerminado = true;
 
-      // 🔹 Calcula la puntuación final
+      // Calcula puntuación
       this.puntuacionFinal = Math.max(0, 1000 - (this.movimientos * 10 + this.tiempo));
 
-      // 🔹 Crea el objeto de la partida para guardar en App.vue
+      // 🔹 Crea objeto partida
       const nuevaPartida = {
         id: Date.now(),
         puntuacion: this.puntuacionFinal,
@@ -118,11 +134,11 @@ export default {
         fechaInicio: new Date().toLocaleDateString()
       };
 
-      // 🔹 Envía la partida al componente principal
+      // 🔹 Envía la partida a App.vue
       this.$emit("agregar-partida", nuevaPartida);
     },
 
-    // 🧩 NUEVO — Botón “Finalizar partida”
+    // 🧩 Botón “Finalizar partida”
     finalizarPartidaManualmente() {
       if (confirm("¿Seguro que deseas finalizar la partida actual?")) {
         this.terminarJuego();
@@ -133,25 +149,17 @@ export default {
       this.iniciarJuego();
     },
 
-    /* ===========================================================
-      🃏 PARTE Rocio — completará la lógica del tablero
-    ============================================================ */
-    // 👉 Sugerencia: funciones que debes implementar:
-    // generarCartas(): duplicar y mezclar las cartas
-    // voltearCarta(carta): manejar la lógica de comparación y aciertos
-    // verificarVictoria(): llamar a this.terminarJuego() cuando todas coincidan
-
-    // Ejemplo de estructura esperada:
+    /* ==========================================================
+      🃏 PARTE Rocío — lógica del tablero (a completar)
+    ========================================================== */
     /*
     generarCartas() {
-      this.cartasEnJuego = [...this.cartasBase, ...this.cartasBase]
-        .sort(() => Math.random() - 0.5)
-        .map(c => ({ ...c, volteada: false, acertada: false }));
+      // Duplica y mezcla las cartas (usará las personalizadas o base)
     },
     voltearCarta(carta) {
-      // Manejar lógica de selección, comparación y aciertos
-      // Actualizar this.movimientos y this.aciertos
-      // Si gana, llamar a this.terminarJuego()
+      // Manejar clicks, comparación y aciertos
+      // Incrementar movimientos
+      // Si gana: this.terminarJuego()
     }
     */
   }
@@ -159,58 +167,114 @@ export default {
 </script>
 
 <style scoped>
+/* =======================
+  🧩 PARTE Leonel — estilo base
+   ======================= */
 .game {
   text-align: center;
   margin-top: 40px;
+  background-color: #f8fbff;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 900px;
+  margin-inline: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 🧩 PARTE Leonel — Información del jugador */
+.jugador {
+  font-size: 1.2rem;
+  color: #255569;
+  margin-bottom: 15px;
+}
+
+/* Info del juego */
 .info {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 25px;
+  margin-bottom: 20px;
+  background-color: #b3e5fc;
+  border-radius: 10px;
+  padding: 10px;
+  color: #255569;
+  font-weight: bold;
+}
+
+/* =======================
+  🧩 Botones
+   ======================= */
+.acciones {
   margin-bottom: 15px;
 }
 
-/* 🧩 Botón para finalizar manualmente */
-.finalizar {
-  margin-bottom: 15px;
-}
-.finalizar button {
+.btn-finalizar {
   background-color: #f44336;
   color: white;
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: 0.3s ease;
 }
-.finalizar button:hover {
+.btn-finalizar:hover {
   background-color: #d32f2f;
 }
 
-/* 🃏 PARTE Rocio — Zona del tablero */
-.tablero {
-  display: grid;
-  grid-template-columns: repeat(4, 80px);
-  gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-/* 🧩 PARTE Leonel — Resultado */
-.resultado {
-  margin-top: 25px;
-}
-button {
+.btn-reiniciar {
   background-color: #03a9f4;
   color: white;
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
   cursor: pointer;
+  transition: 0.3s ease;
 }
-button:hover {
+.btn-reiniciar:hover {
   background-color: #0277bd;
+}
+
+/* =======================
+  🃏 PARTE Rocío — tablero
+   ======================= */
+.tablero {
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  gap: 12px;
+  justify-content: center;
+  margin: 25px 0;
+}
+
+.placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+.carta {
+  background-color: #03a9f4;
+  color: white;
+  font-size: 1.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  height: 100px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+.carta:hover {
+  transform: scale(1.05);
+}
+
+/* =======================
+  🧩 Resultado
+   ======================= */
+.resultado {
+  margin-top: 30px;
+  background-color: #b3e5fc;
+  border-radius: 12px;
+  padding: 20px;
+  color: #255569;
+  font-size: 1.2rem;
 }
 </style>
