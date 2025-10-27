@@ -76,6 +76,7 @@ export default {
   padding: 20px;
   background-color: #f7faff;
   min-height: calc(100vh - 160px);
+  margin-top: 20px;
 }
 
 h2 {

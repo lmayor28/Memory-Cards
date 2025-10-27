@@ -20,13 +20,19 @@
     </div>
 
     <!-- 🃏 PARTE Rocio — Tablero de cartas (a completar) -->
-    <div class="tablero">
-      <!-- 🃏 generar las cartas dinámicamente con v-for -->
-      <!-- Ejemplo: v-for="(carta, index) in cartasEnJuego" -->
-      <!-- y manejar los clics para voltear cartas -->
-      <!-- De momento mostramos un placeholder -->
-      <p>🃏 Aquí va el tablero de memoria (parte Rocio)</p>
+    <div v-if="!juegoTerminado" class="tablero">
+      <ObjectCard
+        v-for="(carta, index) in cartasEnJuego"
+        :key="index"
+        :carta="carta"
+        :modoJuego="true"
+        @voltear="voltearCarta"
+      />
+
     </div>
+
+
+
 
     <!-- 🧩 PARTE Leonel — Resultado final -->
     <div v-if="juegoTerminado" class="resultado">
@@ -38,8 +44,10 @@
 </template>
 
 <script>
+import ObjectCard from "../components/ObjectCard.vue"; 
 export default {
   name: "GameView",
+  components: { ObjectCard },
 
   // 🧩 Recibe usuario actual desde App.vue
   props: {
@@ -60,16 +68,9 @@ export default {
       puntuacionFinal: 0,
 
       // 🃏 Variables base que usará (Rocio)
-      cartasBase: [
-        { icono: "🍎" },
-        { icono: "🍌" },
-        { icono: "🍒" },
-        { icono: "🍇" },
-        { icono: "🍓" },
-        { icono: "🍉" }
-      ],
-      cartasEnJuego: [], // Rocio generará las cartas duplicadas y mezcladas
-      cartaSeleccionada: null // Rocio controlará la carta en juego
+      cartasEnJuego: [],
+      primeraCarta: null,
+      bloqueo: false
     };
   },
 
@@ -99,7 +100,46 @@ export default {
       }, 1000);
 
       // 🃏 Rocio genera el tablero aquí
-      // usando `this.generarCartas()` (función que debes crear)
+      const base = this.usuarioActual?.cartas || [];
+
+      // Si no tiene cartas, lloramos un poco por dentro
+      if (base.length < 2) return;
+
+      // Duplicar y mezclar
+      this.cartasEnJuego = [...base, ...base]
+        .map(c => ({ ...c, volteada: false, acertada: false }))
+        .sort(() => Math.random() - 0.5);
+    },
+
+    voltearCarta(carta) {
+      if (this.bloqueo || carta.volteada || carta.acertada) return;
+
+      carta.volteada = true;
+
+      if (!this.primeraCarta) {
+        this.primeraCarta = carta;
+        return;
+      }
+
+      this.movimientos++;
+      if (carta.id === this.primeraCarta.id) {
+        carta.acertada = true;
+        this.primeraCarta.acertada = true;
+        this.aciertos++;
+        this.primeraCarta = null;
+
+        if (this.aciertos === this.cartasEnJuego.length / 2) {
+          this.terminarJuego();
+        }
+      } else {
+        this.bloqueo = true;
+        setTimeout(() => {
+          carta.volteada = false;
+          this.primeraCarta.volteada = false;
+          this.primeraCarta = null;
+          this.bloqueo = false;
+        }, 800);
+      }
     },
 
     terminarJuego() {
@@ -133,28 +173,7 @@ export default {
       this.iniciarJuego();
     },
 
-    /* ===========================================================
-      🃏 PARTE Rocio — completará la lógica del tablero
-    ============================================================ */
-    // 👉 Sugerencia: funciones que debes implementar:
-    // generarCartas(): duplicar y mezclar las cartas
-    // voltearCarta(carta): manejar la lógica de comparación y aciertos
-    // verificarVictoria(): llamar a this.terminarJuego() cuando todas coincidan
-
-    // Ejemplo de estructura esperada:
-    /*
-    generarCartas() {
-      this.cartasEnJuego = [...this.cartasBase, ...this.cartasBase]
-        .sort(() => Math.random() - 0.5)
-        .map(c => ({ ...c, volteada: false, acertada: false }));
     },
-    voltearCarta(carta) {
-      // Manejar lógica de selección, comparación y aciertos
-      // Actualizar this.movimientos y this.aciertos
-      // Si gana, llamar a this.terminarJuego()
-    }
-    */
-  }
 };
 </script>
 
@@ -192,10 +211,11 @@ export default {
 /* 🃏 PARTE Rocio — Zona del tablero */
 .tablero {
   display: grid;
-  grid-template-columns: repeat(4, 80px);
+  grid-template-columns: repeat(6, 220px);
   gap: 10px;
   justify-content: center;
   margin-top: 20px;
+  margin-bottom: 60px;
 }
 
 /* 🧩 PARTE Leonel — Resultado */

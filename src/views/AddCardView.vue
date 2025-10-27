@@ -88,7 +88,6 @@ export default {
         return;
       }
 
-      // Elimina todas las cartas existentes
       this.cartas.forEach(c => this.$emit("eliminar-carta", c.id));
       this.mensaje = "Todas las cartas han sido eliminadas.";
       setTimeout(() => (this.mensaje = ""), 3000);
@@ -96,6 +95,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .add-card-view {
