@@ -1,74 +1,119 @@
 <template>
-  <div class="stats">
-    <h1>📊 Estadísticas</h1>
+  <section class="stats-view">
+    <h1>📊 Mis Estadísticas</h1>
 
-    <div v-if="!usuarioActual">
-      <p>🔒 Inicia sesión para ver tus estadísticas.</p>
-      <router-link to="/iniciar-sesion">Iniciar Sesión</router-link>
+    <div v-if="usuarioActual && usuarioActual.partidas.length">
+      <h2>Jugador: {{ usuarioActual.nombreUsuario }}</h2>
+
+      <p><strong>Total de partidas:</strong> {{ usuarioActual.partidas.length }}</p>
+      <p><strong>Promedio de aciertos:</strong> {{ promedioAciertos.toFixed(1) }}</p>
+      <p><strong>Promedio de tiempo:</strong> {{ promedioTiempo.toFixed(1) }}s</p>
+      <p><strong>Mejor puntaje:</strong> {{ mejorPuntaje.toFixed(2) }}</p>
+      <p><strong>Posición global:</strong> {{ posicionRanking }}</p>
     </div>
 
-    <div v-else>
-      <p>Jugador: <strong>{{ usuarioActual.nombreUsuario }}</strong></p>
-
-      <table v-if="usuarioActual.partidas?.length">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Puntuación</th>
-            <th>Aciertos</th>
-            <th>Tiempo (seg)</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(partida, index) in usuarioActual.partidas" :key="partida.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ partida.puntuacion }}</td>
-            <td>{{ partida.aciertos }}</td>
-            <td>{{ partida.tiempoFinal }}</td>
-            <td>{{ partida.fechaInicio }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p v-else>😅 No hay partidas registradas aún.</p>
-    </div>
-  </div>
+    <p v-else class="mensaje">No tienes partidas registradas aún.</p>
+  </section>
 </template>
 
 <script>
 export default {
   name: "StatsView",
   props: {
-    usuarioActual: {
-      type: Object,
-      default: null
+    usuarioActual: Object,
+    usuarios: Array
+  },
+
+  computed: {
+    promedioAciertos() {
+      const total = this.usuarioActual.partidas.reduce(
+        (sum, p) => sum + p.aciertos,
+        0
+      );
+      return total / this.usuarioActual.partidas.length;
+    },
+
+    promedioTiempo() {
+      const total = this.usuarioActual.partidas.reduce(
+        (sum, p) => sum + p.tiempoFinal,
+        0
+      );
+      return total / this.usuarioActual.partidas.length;
+    },
+
+    mejorPuntaje() {
+      if (!this.usuarioActual.partidas.length) return 0;
+      const calculados = this.usuarioActual.partidas.map((p) =>
+        this.calcularPuntajePersonalizado(p)
+      );
+      return Math.max(...calculados);
+    },
+
+    posicionRanking() {
+      if (!this.usuarios?.length) return "-";
+
+      // 🔹 Crea ranking global con todos los puntajes
+      const ranking = this.usuarios
+        .map((u) => {
+          const mejores = u.partidas.map((p) =>
+            this.calcularPuntajePersonalizado(p)
+          );
+          return {
+            id: u.id,
+            nombreUsuario: u.nombreUsuario,
+            mejorPuntaje: Math.max(...mejores, 0)
+          };
+        })
+        .sort((a, b) => b.mejorPuntaje - a.mejorPuntaje);
+
+      const index = ranking.findIndex(
+        (r) => r.id === this.usuarioActual.id
+      );
+      return index !== -1 ? index + 1 : "-";
+    }
+  },
+
+  methods: {
+    calcularPuntajePersonalizado(partida) {
+      const base = partida.puntuacion || 1000;
+      const aciertos = partida.aciertos || 1;
+      const tiempo = partida.tiempoFinal || 1;
+      return (base * aciertos) / tiempo;
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.stats {
-  width: 85%;
-  margin: 40px auto;
-  text-align: center;
-  background-color: #e1f5fe;
-  padding: 25px;
-  border-radius: 20px;
-}
-table {
-  margin: 20px auto;
-  border-collapse: collapse;
-  width: 90%;
-}
-th, td {
-  border: 1px solid #0288d1;
-  padding: 8px;
+.stats-view {
+  background-color: #f7faff;
+  padding: 30px;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
-th {
-  background-color: #03a9f4;
-  color: white;
+
+h1 {
+  color: #0277bd;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #01579b;
+  margin-bottom: 10px;
+}
+
+p {
+  margin: 6px 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.mensaje {
+  color: #777;
+  font-style: italic;
+  margin-top: 20px;
 }
 </style>
