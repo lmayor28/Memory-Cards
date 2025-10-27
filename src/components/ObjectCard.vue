@@ -53,24 +53,21 @@ export default {
   },
   computed: {
     reversoSrc() {
-      // Prioriza prop 'reverso', si no usa este img público (cámbialo por la tuya)
       return this.reverso || "/img/reverso.jpg" ;
     }
   },
   methods: {
     handleClick() {
-      // Si estamos en modo juego emitimos evento 'voltear' con la carta
       if (this.modoJuego) {
         this.$emit('voltear', this.carta);
       }
-      // En modo normal no hacemos nada al hacer click en toda la carta
     }
   }
 }
 </script>
 
 <style scoped>
-/* mantiene tus estilos anteriores */
+
 .card {
   background-color: var(--blanco);
   border: 3px solid var(--celeste-primario);
