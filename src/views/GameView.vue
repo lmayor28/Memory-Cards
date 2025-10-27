@@ -194,10 +194,12 @@ export default {
   background-color: #f8fbff;
   border-radius: 12px;
   padding: 20px;
-  max-width: 900px;
+  max-width: 1200px; /* antes 900px */
+  width: 95%; /* adaptación fluida */
   margin-inline: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 
 .jugador {
   font-size: 1.2rem;
@@ -241,12 +243,13 @@ export default {
 /* 🃏 PARTE Rocio — Zona del tablero */
 .tablero {
   display: grid;
-  grid-template-columns: repeat(6, 220px);
-  gap: 10px;
-  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  justify-items: center;
   margin-top: 20px;
   margin-bottom: 60px;
 }
+
 
 /* 🧩 PARTE Leonel — Resultado */
 .resultado {
