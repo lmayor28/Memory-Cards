@@ -39,6 +39,14 @@ export default {
       // Estado central
       usuarioActual: null,
       cartas: [],
+    cartasBase:[
+          { id: 1, nombre: 'Pikachu', descripcion: 'El ratón eléctrico más adorable y peligroso del planeta.', imagen: '../public/img/pikachu.webp', isHide: true, isCopied: false },
+          { id: 2, nombre: 'Iron Man', descripcion: 'Genio, millonario, playboy y filántropo... con una armadura brillante.', imagen: '../public/img/IronMan.jpg', isHide: true, isCopied: false },
+          { id: 3, nombre: 'Albus Dumbledore', descripcion: 'El director de Hogwarts y uno de los magos más poderosos de todos los tiempos.', imagen: '../public/img/Albus.jpg', isHide: true, isCopied: false },
+          { id: 4, nombre: 'Legolas', descripcion: 'El elfo que nunca falla un disparo y siempre tiene el cabello perfecto.', imagen: '../public/img/Legolas.jpg', isHide: true, isCopied: false },
+          { id: 5, nombre: 'Niffler', descripcion: 'Criatura adorable con una peligrosa obsesión por los objetos brillantes.', imagen: '../public/img/niffler.jpg', isHide: true, isCopied: false },
+          { id: 6, nombre: 'Gandalf el Gris', descripcion: 'Hechicero milenario con una extraña afición a desaparecer cuando más se lo necesita.', imagen: '../public/img/gandalf.jpg', isHide: true, isCopied: false }
+        ],
       allUsers: []
     }
   },
@@ -64,12 +72,20 @@ export default {
       const usuarioGuardado = JSON.parse(localStorage.getItem('usuario'));
       if (usuarioGuardado) {
         this.usuarioActual = usuarioGuardado;
-        this.cartas = usuarioGuardado.cartas || [];
-      } else {
-        this.usuarioActual = null;
-        this.cartas = [];
-      }
-    },
+
+    const cartasExistentes = usuarioGuardado.cartas || [];
+    const nuevasCartas = this.cartasBase.filter(
+      c => !cartasExistentes.some(ec => ec.id === c.id)
+    );
+    this.cartas = [...cartasExistentes, ...nuevasCartas];
+
+  } else {
+    this.usuarioActual = null;
+    if (this.cartas.length === 0) {
+      this.cartas = [...this.cartasBase]; // array que definiste
+    }
+  }
+},
 
     // ===================================================
     // 🔹 GESTIÓN DE ESTADO (Login/Registro/Logout)
@@ -126,9 +142,16 @@ export default {
     cerrarSesion() {
       this.usuarioActual = null;
       this.cartas = [];
-      this.guardarSesionUsuarioActual(); // Borra la sesión de localStorage
-      this.$router.push('/');
-    },
+      this.guardarSesionUsuarioActual(); // Limpia localStorage
+
+      this.$router.push('/')
+        .then(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 50);
+        });
+}
+,
 
     // ===================================================
     // 🔹 GESTIÓN DE DATOS (Centralizada y Persistida)

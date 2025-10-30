@@ -6,7 +6,7 @@
       <router-link to="/juego">Jugar</router-link>
       <router-link to="/cartas">Cartas</router-link>
       <router-link to="/estadisticas">Estadísticas</router-link>
-      <router-link to="/mejor-puntaje">Puntajes</router-link>
+      <router-link to="/mejor-puntaje">Mejores Puntajes</router-link>
       <router-link to="/agregar-carta">Agregar Cartas</router-link>
     </div>
 

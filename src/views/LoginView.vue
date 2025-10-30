@@ -88,9 +88,12 @@ export default {
         this.mensaje = `¡Bienvenido de nuevo, ${user.nombreUsuario}!`
         this.error = ''
 
-        setTimeout(() => {
-          this.$router.push('/')
-        }, 1500)
+       this.$router.push('/')
+        .then(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 50);
+        });
 
         return
       }

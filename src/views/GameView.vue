@@ -106,7 +106,7 @@ export default {
       }, 1000);
 
       // 🃏 Rocio genera el tablero aquí
-      const base = this.usuarioActual?.cartas || [];
+      const base = this.cartas || [];
 
       // Si no tiene cartas, lloramos un poco por dentro
       if (base.length < 2) return;
