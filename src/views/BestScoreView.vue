@@ -40,37 +40,36 @@ export default {
 
   computed: {
     topJugadores() {
-      // 🔹 Extrae las partidas de todos los usuarios
+      // 🔹 Combina las partidas de todos los usuarios
       const partidas = this.usuarios.flatMap((u) =>
         (u.partidas || []).map((p) => ({
           id: u.id,
           nombreUsuario: u.nombreUsuario,
           ...p,
-          mejorPuntaje: this.calcularPuntajePersonalizado(p)
+          // 🧮 Cálculo actualizado (fórmula incremental)
+          mejorPuntaje: this.calcularPuntajeIncremental(p)
         }))
       );
 
-      // 🔹 Ordena los jugadores por puntaje descendente
-      const ordenadas = partidas
+      // 🔹 Ordena por puntaje descendente y limita a los 10 mejores
+      return partidas
         .sort((a, b) => b.mejorPuntaje - a.mejorPuntaje)
-        .slice(0, 10); // solo top 10
-
-      return ordenadas;
+        .slice(0, 10);
     }
   },
 
   methods: {
     /**
-     * 🧮 Calcula el puntaje personalizado:
-     *  (puntuacionInicial * aciertos) / tiempo
-     *  - Aciertos altos => más puntos
-     *  - Tiempo bajo => más puntos
+     * 🧮 CAMBIO CLAVE → Nueva fórmula incremental:
+     *  (aciertos * 100) + (1000 / (tiempo + 1))
+     *  👉 Más aciertos = más puntos
+     *  👉 Menos tiempo = más puntos
+     *  👉 Nunca da puntaje negativo
      */
-    calcularPuntajePersonalizado(partida) {
-      const base = partida.puntuacion || 1000;
-      const aciertos = partida.aciertos || 1;
+    calcularPuntajeIncremental(partida) {
+      const aciertos = partida.aciertos || 0;
       const tiempo = partida.tiempoFinal || 1;
-      return (base * aciertos) / tiempo;
+      return (aciertos * 100) + (1000 / (tiempo + 1));
     }
   }
 };
