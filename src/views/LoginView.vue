@@ -2,7 +2,7 @@
   <div class="login">
     <h1>🔐 Iniciar Sesión / Registrarse</h1>
 
-    <form @submit ="manejarUsuario">
+    <form @submit.prevent="manejarUsuario">
       <!-- Campos de datos -->
       <input v-model="usuario.nombreUsuario" type="text" placeholder="Nombre de usuario" required />
       <input v-model="usuario.contraseña" type="password" placeholder="Contraseña" required />
@@ -41,7 +41,6 @@ export default {
 
   data() {
     return {
-      // 🧩 Objeto de usuario
       usuario: {
         id: Date.now(),
         nombre: '',
@@ -52,7 +51,6 @@ export default {
         cartas: [],
         partidas: []
       },
-
       modoRegistro: false, // false = login / true = registro
       mensaje: '',
       error: ''
@@ -63,13 +61,11 @@ export default {
     manejarUsuario() {
       const usuarios = JSON.parse(localStorage.getItem('usuarios')) || []
 
-      // ---------------------------
+      // =========================================================
       // 🔹 MODO LOGIN
-      // ---------------------------
+      // =========================================================
       if (!this.modoRegistro) {
-        const user = usuarios.find(
-          (u) => u.nombreUsuario === this.usuario.nombreUsuario
-        )
+        const user = usuarios.find(u => u.nombreUsuario === this.usuario.nombreUsuario)
 
         if (!user) {
           this.error = 'Usuario no encontrado. Cambia a "Registrarse".'
@@ -84,23 +80,20 @@ export default {
         }
 
         // ✅ Iniciar sesión
-        localStorage.setItem('usuario', JSON.stringify(user))
-        this.mensaje = `¡Bienvenido de nuevo, ${user.nombreUsuario}!`
         this.error = ''
+        this.mensaje = `¡Bienvenido de nuevo, ${user.nombreUsuario}!`
 
-       this.$router.push('/')
-        .then(() => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 50);
-        });
+        // 🟩 Nuevo: Emitimos el evento hacia App.vue
+        this.$emit('login-exitoso', user)
 
+        // Navegar al inicio
+        this.$router.push('/')
         return
       }
 
-      // ---------------------------
+      // =========================================================
       // 🔹 MODO REGISTRO
-      // ---------------------------
+      // =========================================================
       if (
         !this.usuario.nombre ||
         !this.usuario.apellido ||
@@ -126,7 +119,7 @@ export default {
         return
       }
 
-      // Crea un nuevo usuario con ID único
+      // 🆕 Crear un nuevo usuario con estructura completa
       const nuevoUsuario = {
         ...this.usuario,
         id: Date.now(),
@@ -134,16 +127,13 @@ export default {
         partidas: []
       }
 
-      usuarios.push(nuevoUsuario)
-      localStorage.setItem('usuarios', JSON.stringify(usuarios))
-      localStorage.setItem('usuario', JSON.stringify(nuevoUsuario))
+      // 🟩 Nuevo: Emitimos el evento hacia App.vue
+      this.$emit('registrar-usuario', nuevoUsuario)
 
-      this.mensaje = `¡Cuenta creada exitosamente! Bienvenido, ${nuevoUsuario.nombreUsuario}`
       this.error = ''
+      this.mensaje = `¡Cuenta creada exitosamente! Bienvenido, ${nuevoUsuario.nombreUsuario}`
 
-      setTimeout(() => {
-        this.$router.push('/')
-      }, 1500)
+      this.$router.push('/')
     }
   }
 }

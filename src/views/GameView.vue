@@ -21,7 +21,7 @@
       </button>
     </div>
 
-    <!-- 🃏 PARTE Rocio — Tablero de cartas (a completar) -->
+    <!-- 🃏 PARTE Rocio — Tablero de cartas -->
     <div v-if="!juegoTerminado" class="tablero">
       <ObjectCard
         v-for="(carta, index) in cartasEnJuego"
@@ -30,50 +30,37 @@
         :modoJuego="true"
         @voltear="voltearCarta"
       />
-
     </div>
-
-
-
 
     <!-- 🧩 PARTE Leonel — Resultado final -->
     <div v-if="juegoTerminado" class="resultado">
       <h2>🎉 ¡Partida finalizada!</h2>
-      <p>Puntuación final: <strong>{{ puntuacionFinal }}</strong></p>
+      <p>Puntuación final: <strong>{{ puntuacionFinal.toFixed(2) }}</strong></p>
       <button class="btn-reiniciar" @click="reiniciarJuego">🔁 Jugar otra vez</button>
     </div>
   </div>
 </template>
 
 <script>
-import ObjectCard from "../components/ObjectCard.vue"; 
+import ObjectCard from "../components/ObjectCard.vue";
+
 export default {
   name: "GameView",
   components: { ObjectCard },
 
-  // 🧩 Recibe el usuario actual desde App.vue
   props: {
-    usuarioActual: {
-      type: Object,
-      default: null
-    },
-    cartas: {
-      type: Array,
-      default: () => []
-    }
+    usuarioActual: { type: Object, default: null },
+    cartas: { type: Array, default: () => [] }
   },
 
   data() {
     return {
-      // 🧩 PARTE Leonel — variables de control
       movimientos: 0,
       aciertos: 0,
       tiempo: 0,
       temporizador: null,
       juegoTerminado: false,
       puntuacionFinal: 0,
-
-      // 🃏 Variables base que usará (Rocio)
       cartasEnJuego: [],
       primeraCarta: null,
       bloqueo: false
@@ -89,29 +76,18 @@ export default {
       🧩 PARTE Leonel — lógica principal del juego
     ========================================================== */
     iniciarJuego() {
-      // 🔹 Reinicia valores
       this.movimientos = 0;
       this.aciertos = 0;
       this.tiempo = 0;
       this.juegoTerminado = false;
       this.puntuacionFinal = 0;
 
-      // 🔹 Reinicia temporizador
       clearInterval(this.temporizador);
       this.temporizador = setInterval(() => (this.tiempo++), 1000);
 
-      // 🔹 Inicia el cronómetro
-      this.temporizador = setInterval(() => {
-        this.tiempo++;
-      }, 1000);
-
-      // 🃏 Rocio genera el tablero aquí
       const base = this.cartas || [];
-
-      // Si no tiene cartas, lloramos un poco por dentro
       if (base.length < 2) return;
 
-      // Duplicar y mezclar
       this.cartasEnJuego = [...base, ...base]
         .map(c => ({ ...c, volteada: false, acertada: false }))
         .sort(() => Math.random() - 0.5);
@@ -148,15 +124,19 @@ export default {
       }
     },
 
-    // 🔸 Terminar partida (automática o manual)
+    // ==========================================================
+    // 🔹 CAMBIO CLAVE — Puntuación ahora es INCREMENTAL
+    // ==========================================================
     terminarJuego() {
       clearInterval(this.temporizador);
       this.juegoTerminado = true;
 
-      // Calcula puntuación
-      this.puntuacionFinal = Math.max(0, 1000 - (this.movimientos * 10 + this.tiempo));
+      /* 🔸 Antes:
+          this.puntuacionFinal = Math.max(0, 1000 - (this.movimientos * 10 + this.tiempo));
+        🔹 Ahora (más aciertos y menos tiempo = más puntos)
+      */
+      this.puntuacionFinal = (this.aciertos * 100) + (1000 / (this.tiempo + 1));
 
-      // 🔹 Crea objeto partida
       const nuevaPartida = {
         id: Date.now(),
         puntuacion: this.puntuacionFinal,
@@ -165,7 +145,7 @@ export default {
         fechaInicio: new Date().toLocaleDateString()
       };
 
-      // 🔹 Envía la partida a App.vue
+      // 🔹 Enviamos la partida a App.vue
       this.$emit("agregar-partida", nuevaPartida);
     },
 
@@ -178,28 +158,26 @@ export default {
 
     reiniciarJuego() {
       this.iniciarJuego();
-    },
-
-    },
+    }
+  }
 };
 </script>
 
 <style scoped>
 /* =======================
   🧩 PARTE Leonel — estilo base
-   ======================= */
+======================= */
 .game {
   text-align: center;
   margin-top: 40px;
   background-color: #f8fbff;
   border-radius: 12px;
   padding: 20px;
-  max-width: 1200px; /* antes 900px */
-  width: 95%; /* adaptación fluida */
+  max-width: 1200px;
+  width: 95%;
   margin-inline: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-
 
 .jugador {
   font-size: 1.2rem;
@@ -207,7 +185,6 @@ export default {
   margin-bottom: 15px;
 }
 
-/* Info del juego */
 .info {
   display: flex;
   justify-content: center;
@@ -220,13 +197,9 @@ export default {
   font-weight: bold;
 }
 
-/* =======================
-  🧩 Botones
-   ======================= */
 .acciones {
   margin-bottom: 15px;
 }
-
 .btn-finalizar {
   background-color: #f44336;
   color: white;
@@ -249,7 +222,6 @@ export default {
   margin-top: 20px;
   margin-bottom: 60px;
 }
-
 
 /* 🧩 PARTE Leonel — Resultado */
 .resultado {

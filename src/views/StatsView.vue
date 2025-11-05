@@ -41,22 +41,24 @@ export default {
       return total / this.usuarioActual.partidas.length;
     },
 
+    // ✅ Mejor puntaje según la nueva fórmula incremental
     mejorPuntaje() {
       if (!this.usuarioActual.partidas.length) return 0;
       const calculados = this.usuarioActual.partidas.map((p) =>
-        this.calcularPuntajePersonalizado(p)
+        this.calcularPuntajeIncremental(p)
       );
       return Math.max(...calculados);
     },
 
+    // ✅ Posición global en ranking general
     posicionRanking() {
       if (!this.usuarios?.length) return "-";
 
-      // 🔹 Crea ranking global con todos los puntajes
+      // 🔹 Calcula ranking global usando la misma fórmula incremental
       const ranking = this.usuarios
         .map((u) => {
-          const mejores = u.partidas.map((p) =>
-            this.calcularPuntajePersonalizado(p)
+          const mejores = (u.partidas || []).map((p) =>
+            this.calcularPuntajeIncremental(p)
           );
           return {
             id: u.id,
@@ -66,19 +68,22 @@ export default {
         })
         .sort((a, b) => b.mejorPuntaje - a.mejorPuntaje);
 
-      const index = ranking.findIndex(
-        (r) => r.id === this.usuarioActual.id
-      );
+      const index = ranking.findIndex((r) => r.id === this.usuarioActual.id);
       return index !== -1 ? index + 1 : "-";
     }
   },
 
   methods: {
-    calcularPuntajePersonalizado(partida) {
-      const base = partida.puntuacion || 1000;
-      const aciertos = partida.aciertos || 1;
+    /**
+     * 🧮 CAMBIO CLAVE → Fórmula incremental:
+     *  (aciertos * 100) + (1000 / (tiempo + 1))
+     *  👉 Premia aciertos y rapidez
+     *  👉 No puede dar valores negativos
+     */
+    calcularPuntajeIncremental(partida) {
+      const aciertos = partida.aciertos || 0;
       const tiempo = partida.tiempoFinal || 1;
-      return (base * aciertos) / tiempo;
+      return (aciertos * 100) + (1000 / (tiempo + 1));
     }
   }
 };
