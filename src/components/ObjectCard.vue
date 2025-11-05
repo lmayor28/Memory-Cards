@@ -68,6 +68,7 @@ export default {
 
 <style scoped>
 
+
 .card {
   background-color: var(--blanco);
   border: 3px solid var(--celeste-primario);
@@ -145,7 +146,7 @@ export default {
 /* Tamaño especial solo para modo juego */
 .card[modo-juego="true"] {
   width: 170px;
-  height: 240px;
+  height: 270px;
 }
 
 .card[modo-juego="true"] .card-img {
@@ -158,6 +159,10 @@ export default {
 
 .card[modo-juego="true"] .card-desc {
   font-size: 0.9rem;
+}
+.card[modo-juego="true"] .card-title{
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 

@@ -1,7 +1,11 @@
 <template>
   <nav class="navbar">
     <!-- 🔹 Enlaces principales -->
-    <div class="links">
+      <button class="hamburger" @click="menuAbierto = !menuAbierto">
+      ☰
+    </button> 
+
+    <div class="links" :class="{ abierto: menuAbierto }">
       <router-link to="/">Inicio</router-link>
       <router-link to="/juego">Jugar</router-link>
       <router-link to="/cartas">Cartas</router-link>
@@ -33,11 +37,14 @@
       </template>
     </div>
   </nav>
-</template>
+</template>  
 
 <script>
 export default {
   name: 'CNavbar',
+  data() {
+    return { menuAbierto: false };
+  },
   props: {
     // 🧑 Usuario actual (pasado desde App.vue)
     usuario: {
@@ -148,5 +155,47 @@ a.router-link-exact-active {
 
 .login-btn:hover {
   background-color: #0277bd;
+}
+
+
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+/* Media query para móviles */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .links {
+    flex-direction: column;
+    gap: 0;
+    max-height: 0; /* cerrado por defecto */
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .links.abierto {
+    max-height: 500px; /* ajustable según cantidad de links */
+  }
+
+  a {
+    padding: 0.8rem 1rem;
+    display: block;
+  }
+
+  .user-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
 }
 </style>

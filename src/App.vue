@@ -47,6 +47,75 @@ export default {
           { id: 5, nombre: 'Niffler', descripcion: 'Criatura adorable con una peligrosa obsesión por los objetos brillantes.', imagen: '../public/img/niffler.jpg', isHide: true, isCopied: false },
           { id: 6, nombre: 'Gandalf el Gris', descripcion: 'Hechicero milenario con una extraña afición a desaparecer cuando más se lo necesita.', imagen: '../public/img/gandalf.jpg', isHide: true, isCopied: false }
         ],
+        kits: [
+                      {
+                        categoria: 'Personajes de Marvel',
+                        cartas: [
+                          { id: 7, nombre: 'Spider-Man', descripcion: 'El vecino amigable de Nueva York.', imagen: '../public/img/spiderman.jpg', isHide: true, isCopied: false },
+                          { id: 8, nombre: 'Thor', descripcion: 'Dios del trueno con un martillo temperamental.', imagen: '../public/img/thor.jpg', isHide: true, isCopied: false },
+                          { id: 9, nombre: 'Hulk', descripcion: 'Científico con problemas de manejo de ira.', imagen: '../public/img/hulk.jpg', isHide: true, isCopied: false },
+                          { id: 10, nombre: 'Black Widow', descripcion: 'Espía letal con un pasado oscuro.', imagen: '../public/img/blackwidow.jpg', isHide: true, isCopied: false },
+                          { id: 11, nombre: 'Doctor Strange', descripcion: 'Maestro de las artes místicas.', imagen: '../public/img/strange.jpg', isHide: true, isCopied: false },
+                          { id: 12, nombre: 'Captain America', descripcion: 'El hombre fuera de su tiempo.', imagen: '../public/img/capitanamerica.jpg', isHide: true, isCopied: false },
+                        ]
+                      },
+                      {
+                        categoria: 'Plantas (PvZ)',
+                        cartas: [
+                          { id: 13, nombre: 'Lanzaguisantes', descripcion: 'Ataque verde por excelencia.', imagen: '../public/img/lanzaguisantes.jpg', isHide: true, isCopied: false },
+                          { id: 14, nombre: 'Girasol', descripcion: 'Genera energía solar para tus defensas.', imagen: '../public/img/girasol.jpg', isHide: true, isCopied: false },
+                          { id: 15, nombre: 'Nuez', descripcion: 'Resistente muro vegetal.', imagen: '../public/img/nuez.jpg', isHide: true, isCopied: false },
+                          { id: 16, nombre: 'Petacereza', descripcion: 'Explota en una dulce catástrofe.', imagen: '../public/img/petacereza.jpg', isHide: true, isCopied: false },
+                          { id: 17, nombre: 'Hielaguisante', descripcion: 'Congela y daña enemigos.', imagen: '../public/img/hielaguisantes.jpg', isHide: true, isCopied: false },
+                          { id: 18, nombre: 'Repetidora', descripcion: 'Doble potencia, doble diversión.', imagen: '../public/img/repetidora.jpg', isHide: true, isCopied: false },
+                        ]
+                      },
+                      {
+                        categoria: 'Objetos Random',
+                        cartas: [
+                          { id: 19, nombre: 'Tostadora mágica', descripcion: 'Lanza tostadas al infinito.', imagen: '../public/img/tostadoramagica.png', isHide: true, isCopied: false },
+                          { id: 20, nombre: 'Reloj derretido', descripcion: 'Claramente Dalí estuvo aquí.', imagen: '../public/img/relojderretido.jpg', isHide: true, isCopied: false },
+                          { id: 21, nombre: 'Guitarra con alas', descripcion: 'Cuerdas de aire y sonido imposible.', imagen: '../public/img/guitarraalas.jpg', isHide: true, isCopied: false },
+                          { id: 22, nombre: 'Llave del destino', descripcion: 'Abre puertas que deberían seguir cerradas.', imagen: '../public/img/llave-destino.avif', isHide: true, isCopied: false },
+                          { id: 23, nombre: 'Botella con mensaje', descripcion: 'Una historia atrapada en vidrio.', imagen: '../public/img/botella-mensaje.jpg', isHide: true, isCopied: false },
+                          { id: 24, nombre: 'Sombrero con ojos', descripcion: 'Un sombrero que todo lo ve.', imagen: '../public/img/sombrero.jpg', isHide: true, isCopied: false },
+                        ]
+                      },
+                      {
+                        categoria: 'Halloween',
+                        cartas: [
+                          { id: 25, nombre: 'Calabaza Tenebrosa', descripcion: 'Su sonrisa brilla en la oscuridad.', imagen: '../public/img/calabaza-tenebrosa.jpg', isHide: true, isCopied: false },
+                          { id: 26, nombre: 'Murciélago', descripcion: 'Vuela entre gritos y sombras.', imagen: '../public/img/murcielago.png', isHide: true, isCopied: false },
+                          { id: 27, nombre: 'Bruja del pantano', descripcion: 'Sus pociones siempre explotan.', imagen: '../public/img/bruja.png', isHide: true, isCopied: false },
+                          { id: 28, nombre: 'Esqueleto Bailarín', descripcion: 'No tiene músculos, pero ritmo sí.', imagen: '../public/img/esqueleto.jpg', isHide: true, isCopied: false },
+                          { id: 29, nombre: 'Fantasma Alegre', descripcion: 'Le encanta asustar con estilo.', imagen: '../public/img/fantasma.png', isHide: true, isCopied: false },
+                          { id: 30, nombre: 'Gato Negro', descripcion: 'Te observa desde la penumbra.', imagen: '../public/img/gato-negro.png', isHide: true, isCopied: false },
+                        ]
+                      },
+                      {
+                        categoria: 'Personajes de DC',
+                        cartas: [
+                          { id: 31, nombre: 'Batman', descripcion: 'El vigilante de Gotham.', imagen: '../public/img/batman.jpg', isHide: true, isCopied: false },
+                          { id: 32, nombre: 'Superman', descripcion: 'Hombre de acero y moral inquebrantable.', imagen: '../public/img/superman.jpg', isHide: true, isCopied: false },
+                          { id: 33, nombre: 'Wonder Woman', descripcion: 'Guerrera amazona con lazo de la verdad.', imagen: '../public\img\wonder-woman.jpg', isHide: true, isCopied: false },
+                          { id: 34, nombre: 'Flash', descripcion: 'Más rápido que tu conexión WiFi.', imagen: '../public\img\flash.jpg', isHide: true, isCopied: false },
+                          { id: 35, nombre: 'Aquaman', descripcion: 'Rey de los mares y sarcasmo acuático.', imagen: '../public\img\aquaman.jpg', isHide: true, isCopied: false },
+                          { id: 36, nombre: 'Harley Quinn', descripcion: 'La locura con sonrisa pintada.', imagen: 'public\img\harly.jpg', isHide: true, isCopied: false },
+                        ]
+                      },
+                        {
+                        categoria: 'Animales',
+                        cartas: [
+                          { id: 37, nombre: 'Tigre de Bengala', descripcion: 'Un depredador ágil y poderoso.', imagen: '../public\img\tigre.jpg', isHide: true, isCopied: false },
+                          { id: 38, nombre: 'Lobo Ártico', descripcion: 'Cazador de hielo y soledad.', imagen: '../public\img\lobo.jpg', isHide: true, isCopied: false },
+                          { id: 39, nombre: 'Águila Real', descripcion: 'Majestuosa y letal desde los cielos.', imagen: '../public\img\aguila.jpg', isHide: true, isCopied: false },
+                          { id: 40, nombre: 'Panda Gigante', descripcion: 'Maestro del bambú y la calma.', imagen: '../public\img\panda.jpg', isHide: true, isCopied: false },
+                          { id: 41, nombre: 'Camaleón', descripcion: 'Maestro del disfraz natural.', imagen: '../public\img\camaleon.jpg', isHide: true, isCopied: false },
+                          { id: 42, nombre: 'Delfín', descripcion: 'Inteligente y juguetón habitante del océano.', imagen: '../public\img\delfin.jpg', isHide: true, isCopied: false },
+                        ]
+                      },
+                    ],
+
       allUsers: []
     }
   },
@@ -195,6 +264,47 @@ export default {
       this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
     },
 
+
+    desbloquearKitsSegunProgreso() {
+        const partidasTotales = this.usuarioActual.partidas.length;
+
+        const niveles = [
+          { partidas: 0, categoria: 'Halloween' },
+          { partidas: 5, categoria: 'Animales' },
+          { partidas: 15, categoria: 'Personajes de Marvel' },
+          { partidas: 20, categoria: 'Plantas (PvZ)' },
+          { partidas: 25, categoria: 'Objetos Random' },
+          { partidas: 30, categoria: 'Personajes de DC' },
+        ];
+
+   
+
+
+        const categoriasDesbloqueadas = niveles
+          .filter(n => partidasTotales >= n.partidas)
+          .map(n => n.categoria);
+
+        
+
+        const nuevosKits = this.kits.filter(k =>
+          categoriasDesbloqueadas.includes(k.categoria)
+        );
+
+        const nuevasCartas = nuevosKits.flatMap(k => k.cartas);
+
+        
+        const cartasExistentes = this.usuarioActual.cartas || [];
+        const cartasFinales = [
+          ...cartasExistentes,
+          ...nuevasCartas.filter(
+            c => !cartasExistentes.some(ec => ec.id === c.id)
+          ),
+        ];
+
+        this.usuarioActual.cartas = cartasFinales;
+        this.cartas = cartasFinales;
+      },
+
     // Se llama cuando GameView emite @agregar-partida
     agregarPartida(nuevaPartida) {
       if (!this.usuarioActual) return;
@@ -204,6 +314,9 @@ export default {
         this.usuarioActual.partidas = [];
       }
       this.usuarioActual.partidas.push(partidaConId); // Modifica directo el objeto
+
+      this.desbloquearKitsSegunProgreso();// 🔹 Revisa si debe desbloquear nuevos kits
+
       this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
     },
   },
