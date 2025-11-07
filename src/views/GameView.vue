@@ -43,14 +43,16 @@
 
 <script>
 import ObjectCard from "../components/ObjectCard.vue";
-
 export default {
   name: "GameView",
   components: { ObjectCard },
 
   props: {
-    usuarioActual: { type: Object, default: null },
-    cartas: { type: Array, default: () => [] }
+    usuarioActual: Object,
+    cartas: {
+      type: Array,
+      default: () => []
+    }
   },
 
   data() {
@@ -61,6 +63,7 @@ export default {
       temporizador: null,
       juegoTerminado: false,
       puntuacionFinal: 0,
+
       cartasEnJuego: [],
       primeraCarta: null,
       bloqueo: false
@@ -72,9 +75,6 @@ export default {
   },
 
   methods: {
-    /* ==========================================================
-      🧩 PARTE Leonel — lógica principal del juego
-    ========================================================== */
     iniciarJuego() {
       this.movimientos = 0;
       this.aciertos = 0;
@@ -83,7 +83,7 @@ export default {
       this.puntuacionFinal = 0;
 
       clearInterval(this.temporizador);
-      this.temporizador = setInterval(() => (this.tiempo++), 1000);
+      this.temporizador = setInterval(() => this.tiempo++, 1000);
 
       const base = this.cartas || [];
       if (base.length < 2) return;
@@ -104,6 +104,7 @@ export default {
       }
 
       this.movimientos++;
+
       if (carta.id === this.primeraCarta.id) {
         carta.acertada = true;
         this.primeraCarta.acertada = true;
@@ -124,18 +125,14 @@ export default {
       }
     },
 
-    // ==========================================================
-    // 🔹 CAMBIO CLAVE — Puntuación ahora es INCREMENTAL
-    // ==========================================================
     terminarJuego() {
       clearInterval(this.temporizador);
       this.juegoTerminado = true;
 
-      /* 🔸 Antes:
-          this.puntuacionFinal = Math.max(0, 1000 - (this.movimientos * 10 + this.tiempo));
-        🔹 Ahora (más aciertos y menos tiempo = más puntos)
-      */
-      this.puntuacionFinal = (this.aciertos * 100) + (1000 / (this.tiempo + 1));
+      // 🧮 Nueva fórmula de puntuación incremental:
+      // Más aciertos => más puntos | Menos tiempo => más puntos
+      this.puntuacionFinal =
+        (this.aciertos * 100) + ((100 * this.aciertos) / (this.tiempo + 1));
 
       const nuevaPartida = {
         id: Date.now(),
@@ -145,11 +142,9 @@ export default {
         fechaInicio: new Date().toLocaleDateString()
       };
 
-      // 🔹 Enviamos la partida a App.vue
       this.$emit("agregar-partida", nuevaPartida);
     },
 
-    // 🧩 Botón “Finalizar partida”
     finalizarPartidaManualmente() {
       if (confirm("¿Seguro que deseas finalizar la partida actual?")) {
         this.terminarJuego();
@@ -164,9 +159,6 @@ export default {
 </script>
 
 <style scoped>
-/* =======================
-  🧩 PARTE Leonel — estilo base
-======================= */
 .game {
   text-align: center;
   margin-top: 40px;
@@ -200,6 +192,7 @@ export default {
 .acciones {
   margin-bottom: 15px;
 }
+
 .btn-finalizar {
   background-color: #f44336;
   color: white;
@@ -213,7 +206,6 @@ export default {
   background-color: #d32f2f;
 }
 
-/* 🃏 PARTE Rocio — Zona del tablero */
 .tablero {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -223,11 +215,10 @@ export default {
   margin-bottom: 60px;
 }
 
-/* 🧩 PARTE Leonel — Resultado */
 .resultado {
   margin-top: 25px;
 }
-button {
+.btn-reiniciar {
   background-color: #03a9f4;
   color: white;
   border: none;
