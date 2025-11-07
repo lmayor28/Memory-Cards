@@ -2,26 +2,26 @@
   <div class="game">
     <h1>🧠 Juego de Memoria</h1>
 
-    <!-- 🧩 PARTE Leonel — Mostrar usuario actual -->
+    <!-- 🧩 Mostrar usuario actual -->
     <p class="jugador">
       🧩 Jugador: <strong>{{ usuarioActual?.nombreUsuario || "Invitado" }}</strong>
     </p>
 
-    <!-- 🧩 PARTE Leonel — Información del progreso -->
+    <!-- 🧩 Información del progreso -->
     <div class="info">
       <p><strong>Movimientos:</strong> {{ movimientos }}</p>
       <p><strong>Aciertos:</strong> {{ aciertos }}</p>
       <p><strong>Tiempo:</strong> {{ tiempo }}s</p>
     </div>
 
-    <!-- 🧩 PARTE Leonel — Botón para finalizar manualmente -->
+    <!-- 🧩 Botón para finalizar manualmente -->
     <div v-if="!juegoTerminado" class="acciones">
       <button class="btn-finalizar" @click="finalizarPartidaManualmente">
         🏁 Finalizar partida
       </button>
     </div>
 
-    <!-- 🃏 PARTE Rocio — Tablero de cartas -->
+    <!-- 🃏 Tablero de cartas -->
     <div v-if="!juegoTerminado" class="tablero">
       <ObjectCard
         v-for="(carta, index) in cartasEnJuego"
@@ -32,7 +32,7 @@
       />
     </div>
 
-    <!-- 🧩 PARTE Leonel — Resultado final -->
+    <!-- 🧩 Resultado final -->
     <div v-if="juegoTerminado" class="resultado">
       <h2>🎉 ¡Partida finalizada!</h2>
       <p>Puntuación final: <strong>{{ puntuacionFinal.toFixed(2) }}</strong></p>
@@ -43,6 +43,7 @@
 
 <script>
 import ObjectCard from "../components/ObjectCard.vue";
+
 export default {
   name: "GameView",
   components: { ObjectCard },
@@ -75,6 +76,9 @@ export default {
   },
 
   methods: {
+    /* =======================================================
+      🧩 Inicializa el juego
+    ======================================================= */
     iniciarJuego() {
       this.movimientos = 0;
       this.aciertos = 0;
@@ -88,11 +92,15 @@ export default {
       const base = this.cartas || [];
       if (base.length < 2) return;
 
+      // Duplicar y mezclar cartas
       this.cartasEnJuego = [...base, ...base]
         .map(c => ({ ...c, volteada: false, acertada: false }))
         .sort(() => Math.random() - 0.5);
     },
 
+    /* =======================================================
+      🧩 Lógica de volteo de cartas
+    ======================================================= */
     voltearCarta(carta) {
       if (this.bloqueo || carta.volteada || carta.acertada) return;
 
@@ -125,12 +133,15 @@ export default {
       }
     },
 
+    /* =======================================================
+      🧩 Finaliza el juego (manual o automático)
+    ======================================================= */
     terminarJuego() {
       clearInterval(this.temporizador);
       this.juegoTerminado = true;
 
       // 🧮 Nueva fórmula de puntuación incremental:
-      // Más aciertos => más puntos | Menos tiempo => más puntos
+      // más aciertos → más puntos / menos tiempo → más puntos
       this.puntuacionFinal =
         (this.aciertos * 100) + ((100 * this.aciertos) / (this.tiempo + 1));
 
@@ -142,9 +153,19 @@ export default {
         fechaInicio: new Date().toLocaleDateString()
       };
 
+      // 🧩 Si el jugador es "Invitado", no guardar la partida
+      if (this.usuarioActual?.id === "guest" || !this.usuarioActual) {
+        alert("⚠️ Eres un invitado. Tus puntajes no se guardarán.");
+        return;
+      }
+
+      // 🧩 Enviar la partida al componente principal (App.vue)
       this.$emit("agregar-partida", nuevaPartida);
     },
 
+    /* =======================================================
+      🧩 Botón para finalizar manualmente
+    ======================================================= */
     finalizarPartidaManualmente() {
       if (confirm("¿Seguro que deseas finalizar la partida actual?")) {
         this.terminarJuego();
