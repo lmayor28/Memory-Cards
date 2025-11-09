@@ -2,26 +2,26 @@
   <div class="game">
     <h1>🧠 Juego de Memoria</h1>
 
-    <!-- 🧩 PARTE Leonel — Mostrar usuario actual -->
+    <!-- 🧩 Mostrar usuario actual -->
     <p class="jugador">
       🧩 Jugador: <strong>{{ usuarioActual?.nombreUsuario || "Invitado" }}</strong>
     </p>
 
-    <!-- 🧩 PARTE Leonel — Información del progreso -->
+    <!-- 🧩 Información del progreso -->
     <div class="info">
       <p><strong>Movimientos:</strong> {{ movimientos }}</p>
       <p><strong>Aciertos:</strong> {{ aciertos }}</p>
       <p><strong>Tiempo:</strong> {{ tiempo }}s</p>
     </div>
 
-    <!-- 🧩 PARTE Leonel — Botón para finalizar manualmente -->
+    <!-- 🧩 Botón para finalizar manualmente -->
     <div v-if="!juegoTerminado" class="acciones">
       <button class="btn-finalizar" @click="finalizarPartidaManualmente">
         🏁 Finalizar partida
       </button>
     </div>
 
-    <!-- 🃏 PARTE Rocio — Tablero de cartas -->
+    <!-- 🃏 Tablero de cartas -->
     <div v-if="!juegoTerminado" class="tablero">
       <ObjectCard
         v-for="(carta, index) in cartasEnJuego"
@@ -32,7 +32,7 @@
       />
     </div>
 
-    <!-- 🧩 PARTE Leonel — Resultado final -->
+    <!-- 🧩 Resultado final -->
     <div v-if="juegoTerminado" class="resultado">
       <h2>🎉 ¡Partida finalizada!</h2>
       <p>Puntuación final: <strong>{{ puntuacionFinal.toFixed(2) }}</strong></p>
@@ -49,8 +49,11 @@ export default {
   components: { ObjectCard },
 
   props: {
-    usuarioActual: { type: Object, default: null },
-    cartas: { type: Array, default: () => [] }
+    usuarioActual: Object,
+    cartas: {
+      type: Array,
+      default: () => []
+    }
   },
 
   data() {
@@ -61,6 +64,7 @@ export default {
       temporizador: null,
       juegoTerminado: false,
       puntuacionFinal: 0,
+
       cartasEnJuego: [],
       primeraCarta: null,
       bloqueo: false
@@ -72,9 +76,9 @@ export default {
   },
 
   methods: {
-    /* ==========================================================
-      🧩 PARTE Leonel — lógica principal del juego
-    ========================================================== */
+    /* =======================================================
+      🧩 Inicializa el juego
+    ======================================================= */
     iniciarJuego() {
       this.movimientos = 0;
       this.aciertos = 0;
@@ -83,7 +87,7 @@ export default {
       this.puntuacionFinal = 0;
 
       clearInterval(this.temporizador);
-      this.temporizador = setInterval(() => (this.tiempo++), 1000);
+      this.temporizador = setInterval(() => this.tiempo++, 1000);
 
       const base = (this.cartas || []).filter(c => c.seleccionada);
       if (base.length < 2){
@@ -92,11 +96,15 @@ export default {
         return;
       }
 
+      // Duplicar y mezclar cartas
       this.cartasEnJuego = [...base, ...base]
         .map(c => ({ ...c, volteada: false, acertada: false }))
         .sort(() => Math.random() - 0.5);
     },
 
+    /* =======================================================
+      🧩 Lógica de volteo de cartas
+    ======================================================= */
     voltearCarta(carta) {
       if (this.bloqueo || carta.volteada || carta.acertada) return;
 
@@ -108,6 +116,7 @@ export default {
       }
 
       this.movimientos++;
+
       if (carta.id === this.primeraCarta.id) {
         carta.acertada = true;
         this.primeraCarta.acertada = true;
@@ -128,18 +137,17 @@ export default {
       }
     },
 
-    // ==========================================================
-    // 🔹 CAMBIO CLAVE — Puntuación ahora es INCREMENTAL
-    // ==========================================================
+    /* =======================================================
+      🧩 Finaliza el juego (manual o automático)
+    ======================================================= */
     terminarJuego() {
       clearInterval(this.temporizador);
       this.juegoTerminado = true;
 
-      /* 🔸 Antes:
-          this.puntuacionFinal = Math.max(0, 1000 - (this.movimientos * 10 + this.tiempo));
-        🔹 Ahora (más aciertos y menos tiempo = más puntos)
-      */
-      this.puntuacionFinal = (this.aciertos * 100) + (1000 / (this.tiempo + 1));
+      // 🧮 Nueva fórmula de puntuación incremental:
+      // más aciertos → más puntos / menos tiempo → más puntos
+      this.puntuacionFinal =
+        (this.aciertos * 100) + ((100 * this.aciertos) / (this.tiempo + 1));
 
       const nuevaPartida = {
         id: Date.now(),
@@ -149,11 +157,19 @@ export default {
         fechaInicio: new Date().toLocaleDateString()
       };
 
-      // 🔹 Enviamos la partida a App.vue
+      // 🧩 Si el jugador es "Invitado", no guardar la partida
+      if (this.usuarioActual?.id === "guest" || !this.usuarioActual) {
+        alert("⚠️ Eres un invitado. Tus puntajes no se guardarán.");
+        return;
+      }
+
+      // 🧩 Enviar la partida al componente principal (App.vue)
       this.$emit("agregar-partida", nuevaPartida);
     },
 
-    // 🧩 Botón “Finalizar partida”
+    /* =======================================================
+      🧩 Botón para finalizar manualmente
+    ======================================================= */
     finalizarPartidaManualmente() {
       if (confirm("¿Seguro que deseas finalizar la partida actual?")) {
         this.terminarJuego();
@@ -168,9 +184,6 @@ export default {
 </script>
 
 <style scoped>
-/* =======================
-  🧩 PARTE Leonel — estilo base
-======================= */
 .game {
   text-align: center;
   margin-top: 40px;
@@ -204,6 +217,7 @@ export default {
 .acciones {
   margin-bottom: 15px;
 }
+
 .btn-finalizar {
   background-color: #f44336;
   color: white;
@@ -217,7 +231,6 @@ export default {
   background-color: #d32f2f;
 }
 
-/* 🃏 PARTE Rocio — Zona del tablero */
 .tablero {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -227,11 +240,10 @@ export default {
   margin-bottom: 60px;
 }
 
-/* 🧩 PARTE Leonel — Resultado */
 .resultado {
   margin-top: 25px;
 }
-button {
+.btn-reiniciar {
   background-color: #03a9f4;
   color: white;
   border: none;

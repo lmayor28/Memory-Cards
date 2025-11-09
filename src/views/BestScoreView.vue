@@ -30,7 +30,6 @@
 <script>
 export default {
   name: "BestScoreView",
-
   props: {
     usuarios: {
       type: Array,
@@ -40,18 +39,15 @@ export default {
 
   computed: {
     topJugadores() {
-      // 🔹 Combina las partidas de todos los usuarios
       const partidas = this.usuarios.flatMap((u) =>
         (u.partidas || []).map((p) => ({
           id: u.id,
           nombreUsuario: u.nombreUsuario,
           ...p,
-          // 🧮 Cálculo actualizado (fórmula incremental)
-          mejorPuntaje: this.calcularPuntajeIncremental(p)
+          mejorPuntaje: this.calcularPuntajePersonalizado(p)
         }))
       );
 
-      // 🔹 Ordena por puntaje descendente y limita a los 10 mejores
       return partidas
         .sort((a, b) => b.mejorPuntaje - a.mejorPuntaje)
         .slice(0, 10);
@@ -59,17 +55,10 @@ export default {
   },
 
   methods: {
-    /**
-     * 🧮 CAMBIO CLAVE → Nueva fórmula incremental:
-     *  (aciertos * 100) + (1000 / (tiempo + 1))
-     *  👉 Más aciertos = más puntos
-     *  👉 Menos tiempo = más puntos
-     *  👉 Nunca da puntaje negativo
-     */
-    calcularPuntajeIncremental(partida) {
+    calcularPuntajePersonalizado(partida) {
       const aciertos = partida.aciertos || 0;
       const tiempo = partida.tiempoFinal || 1;
-      return (aciertos * 100) + (1000 / (tiempo + 1));
+      return (aciertos * 100) + ((100 * aciertos) / (tiempo + 1));
     }
   }
 };

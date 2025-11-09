@@ -7,7 +7,7 @@
         ¿Te atreves a recordar dónde está todo para ganar?
       </p>
 
-      <!-- Botón con lógica de login antes de jugar -->
+      <!-- 🧩 Botón con detección de sesión e invitado -->
       <button @click="jugar">Jugar</button>
     </div>
 
@@ -45,14 +45,40 @@ export default {
   ],
 
   methods: {
+    /**
+     * 🧩 Nueva lógica del botón “Jugar”
+     * - Si hay usuario logueado, entra directamente al juego
+     * - Si no hay usuario logueado, pregunta si quiere jugar como invitado
+     *   → crea un usuario temporal “Invitado” que no guarda partidas
+     *   → o redirige al login si cancela
+     */
     jugar() {
       const usuario = localStorage.getItem('usuario')
+
       if (usuario) {
-        // Si hay usuario logueado, entra al juego
+        // ✅ Usuario logueado: entra al juego directamente
         this.$router.push('/juego')
       } else {
-        // Si no hay usuario logueado, redirige al login
-        this.$router.push('/iniciar-sesion')
+        // ⚠️ No hay usuario, preguntar si quiere jugar como invitado
+        const continuar = confirm(
+          'Estás jugando como invitado. Tus puntajes no se guardarán. ¿Deseas continuar?'
+        )
+
+        if (continuar) {
+          // Crea un usuario temporal invitado
+          const invitado = {
+            id: 'guest',
+            nombreUsuario: 'Invitado',
+            partidas: [],
+            cartas: []
+          }
+          // Guarda temporalmente en localStorage
+          localStorage.setItem('usuario', JSON.stringify(invitado))
+          this.$router.push('/juego')
+        } else {
+          // Si cancela, lo mandamos al login
+          this.$router.push('/iniciar-sesion')
+        }
       }
     }
   }
