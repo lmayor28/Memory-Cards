@@ -167,22 +167,23 @@ a.router-link-exact-active {
   cursor: pointer;
 }
 
-/* Media query para móviles */
+
 @media (max-width: 768px) {
   .hamburger {
     display: block;
+    
   }
 
   .links {
     flex-direction: column;
     gap: 0;
-    max-height: 0; /* cerrado por defecto */
+    max-height: 0; 
     overflow: hidden;
     width: 100%;
   }
 
   .links.abierto {
-    max-height: 500px; /* ajustable según cantidad de links */
+    max-height: 500px;
   }
 
   a {

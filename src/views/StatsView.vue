@@ -91,10 +91,10 @@ export default {
 
 <style scoped>
 .stats-view {
-  background-color: #f7faff;
+  background-color: var(--celeste-primario);
   padding: 30px;
   max-width: 600px;
-  margin: 0 auto;
+  margin: 2rem auto 0 auto;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;

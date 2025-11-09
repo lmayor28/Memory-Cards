@@ -85,8 +85,12 @@ export default {
       clearInterval(this.temporizador);
       this.temporizador = setInterval(() => (this.tiempo++), 1000);
 
-      const base = this.cartas || [];
-      if (base.length < 2) return;
+      const base = (this.cartas || []).filter(c => c.seleccionada);
+      if (base.length < 2){
+        alert("Selecciona al menos 2 cartas para jugar.");
+        this.$router.push("/cartas");
+        return;
+      }
 
       this.cartasEnJuego = [...base, ...base]
         .map(c => ({ ...c, volteada: false, acertada: false }))
@@ -238,5 +242,26 @@ button {
 }
 .btn-reiniciar:hover {
   background-color: #0277bd;
+}
+
+@media (max-width: 1024px) {
+    .tablero {
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      padding: 10px;
+      gap: 10px;
+    }
+}
+@media (max-width: 768px) {
+  .tablero {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+  }
+    
+}
+@media (max-width: 600px) {
+  .tablero {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 6px; 
+  }
 }
 </style>

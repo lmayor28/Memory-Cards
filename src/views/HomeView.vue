@@ -142,4 +142,34 @@ export default {
   font-weight: bold;
   text-decoration: none;
 }
+
+@media (max-width: 480px){
+  .anuciado h1 {
+    font-size: 2.2em;
+    width: 200px;
+    margin-bottom: 10px;
+  }
+  .anuciado p {
+    font-size: 1.1em;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.anuciado button {
+    font-size: 1em;
+    padding: 8px 30px;
+}
+.explicacion{
+    padding: 20px 15px;
+    border: 2px solid var(--celeste-oscuro, #255569);
+  }
+  .explicacion h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    margin-top: 10px;
+  }
+  .explicacion p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+}
 </style>

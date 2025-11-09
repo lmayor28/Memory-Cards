@@ -22,7 +22,7 @@
 </div>
 
 
-    <!-- MODO COLECCIÓN / CARDS VIEW: info y botón eliminar -->
+    <!-- MODO COLECCIÓN / CARDS VIEW-->
     <div v-else>
       <img
         v-if="carta.imagen"
@@ -33,6 +33,16 @@
       <div class="card-body">
         <h3 class="card-title">{{ carta.nombre || 'Carta sin nombre' }}</h3>
         <p class="card-desc">{{ carta.descripcion || 'Sin descripción disponible.' }}</p>
+
+        <label class="selector-carta" @click.stop>
+        <input
+          type="checkbox"
+          :checked="carta.seleccionada"
+          @change.stop="$emit('toggle-seleccion', carta.id)"
+        />
+        Seleccionar
+      </label>
+
         <button
           v-if="$route.name === 'cards'"
           class="btn-delete"
@@ -165,6 +175,110 @@ export default {
   margin-bottom: 2px;
 }
 
+@media (max-width: 1024px) {
+  .card[modo-juego="true"]{
+    width: 140px;
+    height: 220px;
+  }
+  .card[modo-juego="true"] .card-img {
+    height: 120px;
+  }
+  .card[modo-juego="true"] .card-title {
+    font-size: 0.9rem;
+  }
+  .card[modo-juego="true"] .card-desc {
+    font-size: 0.8rem;
+  }
+  
+}
+
+@media (max-width: 768px) {
+  .card[modo-juego="true"]{
+    width: 100px;
+    height: 160px;
+  }
+  .card[modo-juego="true"] .card-img {
+    height: 80px;
+  }
+  .card[modo-juego="true"] .card-title {
+    font-size: 0.7rem;
+  }
+  .card[modo-juego="true"] .card-desc {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .card[modo-juego="true"]{
+    width: 80px;
+    height: 130px;
+  }
+  .card[modo-juego="true"] .card-img {
+    height: 60px;
+  }
+  .card[modo-juego="true"] .card-title {
+    font-size: 0.6rem;
+  }
+  .card[modo-juego="true"] .card-desc {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .card{
+    width: 180px;
+    height: 250px;
+  }
+  .card-img {
+    height: 130px;
+  }
+  .card-title {
+    font-size: 1rem;
+    margin-top: 1px;
+    margin-bottom: 0.5px;
+  }
+  .card-desc {
+    font-size: 0.8rem;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .card{
+    width: 140px;
+    height: 200px;
+  }
+  .card-img {
+    height: 100px;
+  }
+  .card-title {
+    font-size: 0.9rem;
+    margin-top: 0.5px;
+    margin-bottom: 0.3px;
+  }
+  .card-desc {
+    font-size: 0.7rem;
+  }
+   
+}
+
+@media (max-width: 600px) {
+  .card{
+    width: 120px;
+    height: 170px;
+  }
+  .card-img {
+    height: 80px;
+  }
+  .card-title {
+    font-size: 0.8rem;
+    margin-top: 0.3px;
+    margin-bottom: 0.2px;
+  }
+  .card-desc {
+    font-size: 0.6rem;
+  }
+}
 
 
 </style>

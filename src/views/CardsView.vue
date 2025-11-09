@@ -4,6 +4,15 @@
     <h2>Mis Cartas</h2>
     <button><router-link to="/agregar-carta">Agregar Cartas</router-link></button>
     </div>
+    <div class="botones-juego">
+      <button @click="deseleccionarTodo">X</button>
+      <button @click="seleccionarAleatorio(6)">6</button>
+      <button @click="seleccionarAleatorio(12)">12</button>
+      <button @click="seleccionarAleatorio(18)">18</button>
+      <button @click="seleccionarAleatorio(24)">24</button>
+      <button @click="seleccionarAleatorio('todas')">Seleccionar todas</button>
+    </div>
+
 
     <p v-if="!cartas || cartas.length === 0" class="vacio">
       No hay cartas aún. Ve a "Agregar Cartas" para crear una.
@@ -17,6 +26,7 @@
         :carta="carta"
         @eliminar="eliminarCarta"
         @click="verCarta(carta)"
+        @toggle-seleccion="toggleSeleccion"
       />
     </div>
 
@@ -66,7 +76,45 @@ export default {
     },
     cerrarModal() {
       this.cartaSeleccionada = null;
+    },
+    toggleSeleccion(id) {
+      const carta = this.cartas.find(c => c.id === id);
+      carta.seleccionada = !carta.seleccionada;
+
+      this.$emit("actualizar-seleccion", this.cartas);
+    },
+    seleccionarAleatorio(cantidad) {
+      // 1. Deseleccionamos todas
+      this.cartas.forEach(c => (c.seleccionada = false));
+
+      // 2. Si pidió todas
+      if (cantidad === 'todas') {
+        this.cartas.forEach(c => (c.seleccionada = true));
+      } else {
+        // 3. Clonamos y mezclamos aleatoriamente
+        let mezcladas = [...this.cartas].sort(() => Math.random() - 0.5);
+
+        // 4. Tomamos las primeras X
+        let elegidas = mezcladas.slice(0, cantidad);
+
+        // 5. Las marcamos
+        elegidas.forEach(c => (c.seleccionada = true));
+      }
+
+      // 6. Avisamos a App.vue (para guardar en localStorage)
+      this.$emit("actualizar-seleccion", this.cartas);
+    },
+
+    deseleccionarTodo() {
+      // Establece todo en false
+      this.cartas.forEach(c => c.seleccionada = false);
+
+      // Actualizamos en App.vue (localStorage)
+      this.$emit("actualizar-seleccion", this.cartas);
     }
+
+
+
   }
 };
 </script>
@@ -82,7 +130,7 @@ export default {
 h2 {
   text-align: center;
   color: var(--celeste-oscuro);
-  font-size: 2rem;
+  font-size: 2.6rem;
   margin-bottom: 16px;
 }
 
@@ -92,6 +140,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .txtybtn button:hover {
@@ -196,5 +245,53 @@ h2 {
 
 .btn-close:hover {
   background-color: #023e8a;
+}
+
+.btn-select {
+  margin-top: 5px;
+  background-color: #b0bec5;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+
+.btn-select.activa {
+  background-color: #0077b6;
+}
+
+.botones-juego{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.botones-juego button{
+ background-color: var(--celeste-contraste);
+  color: var(--blanco);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.botones-juego button:hover {
+  background-color: var(--celeste-oscuro);
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
 }
 </style>

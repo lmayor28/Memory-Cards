@@ -16,6 +16,8 @@
         @agregar-carta="agregarCarta"
         @eliminar-carta="eliminarCarta"
         @agregar-partida="agregarPartida"
+        @actualizar-seleccion="actualizarSeleccionCartas"
+
       />
     </router-view>
   </main>
@@ -97,21 +99,21 @@ export default {
                         cartas: [
                           { id: 31, nombre: 'Batman', descripcion: 'El vigilante de Gotham.', imagen: '../public/img/batman.jpg', isHide: true, isCopied: false },
                           { id: 32, nombre: 'Superman', descripcion: 'Hombre de acero y moral inquebrantable.', imagen: '../public/img/superman.jpg', isHide: true, isCopied: false },
-                          { id: 33, nombre: 'Wonder Woman', descripcion: 'Guerrera amazona con lazo de la verdad.', imagen: '../public\img\wonder-woman.jpg', isHide: true, isCopied: false },
-                          { id: 34, nombre: 'Flash', descripcion: 'Más rápido que tu conexión WiFi.', imagen: '../public\img\flash.jpg', isHide: true, isCopied: false },
-                          { id: 35, nombre: 'Aquaman', descripcion: 'Rey de los mares y sarcasmo acuático.', imagen: '../public\img\aquaman.jpg', isHide: true, isCopied: false },
-                          { id: 36, nombre: 'Harley Quinn', descripcion: 'La locura con sonrisa pintada.', imagen: 'public\img\harly.jpg', isHide: true, isCopied: false },
+                          { id: 33, nombre: 'Wonder Woman', descripcion: 'Guerrera amazona con lazo de la verdad.', imagen: '../public/img/wonder-woman.jpg', isHide: true, isCopied: false },
+                          { id: 34, nombre: 'Flash', descripcion: 'Más rápido que tu conexión WiFi.', imagen: '../public/img/flash.jpg', isHide: true, isCopied: false },
+                          { id: 35, nombre: 'Aquaman', descripcion: 'Rey de los mares y sarcasmo acuático.', imagen: '../public/img/aquaman.jpg', isHide: true, isCopied: false },
+                          { id: 36, nombre: 'Harley Quinn', descripcion: 'La locura con sonrisa pintada.', imagen: '../public/img/harly.jpg', isHide: true, isCopied: false },
                         ]
                       },
                         {
                         categoria: 'Animales',
                         cartas: [
-                          { id: 37, nombre: 'Tigre de Bengala', descripcion: 'Un depredador ágil y poderoso.', imagen: '../public\img\tigre.jpg', isHide: true, isCopied: false },
-                          { id: 38, nombre: 'Lobo Ártico', descripcion: 'Cazador de hielo y soledad.', imagen: '../public\img\lobo.jpg', isHide: true, isCopied: false },
-                          { id: 39, nombre: 'Águila Real', descripcion: 'Majestuosa y letal desde los cielos.', imagen: '../public\img\aguila.jpg', isHide: true, isCopied: false },
-                          { id: 40, nombre: 'Panda Gigante', descripcion: 'Maestro del bambú y la calma.', imagen: '../public\img\panda.jpg', isHide: true, isCopied: false },
-                          { id: 41, nombre: 'Camaleón', descripcion: 'Maestro del disfraz natural.', imagen: '../public\img\camaleon.jpg', isHide: true, isCopied: false },
-                          { id: 42, nombre: 'Delfín', descripcion: 'Inteligente y juguetón habitante del océano.', imagen: '../public\img\delfin.jpg', isHide: true, isCopied: false },
+                          { id: 37, nombre: 'Tigre de Bengala', descripcion: 'Un depredador ágil y poderoso.', imagen: '../public/img/tigre.jpg', isHide: true, isCopied: false },
+                          { id: 38, nombre: 'Lobo Ártico', descripcion: 'Cazador de hielo y soledad.', imagen: '../public/img/lobo.jpg', isHide: true, isCopied: false },
+                          { id: 39, nombre: 'Águila Real', descripcion: 'Majestuosa y letal desde los cielos.', imagen: '../public/img/aguila.jpg', isHide: true, isCopied: false },
+                          { id: 40, nombre: 'Panda Gigante', descripcion: 'Maestro del bambú y la calma.', imagen: '../public/img/panda.jpg', isHide: true, isCopied: false },
+                          { id: 41, nombre: 'Camaleón', descripcion: 'Maestro del disfraz natural.', imagen: '../public/img/camaleon.jpg', isHide: true, isCopied: false },
+                          { id: 42, nombre: 'Delfín', descripcion: 'Inteligente y juguetón habitante del océano.', imagen: '../public/img/delfin.jpg', isHide: true, isCopied: false },
                         ]
                       },
                     ],
@@ -119,6 +121,9 @@ export default {
       allUsers: []
     }
   },
+
+  
+
 
   methods: {
     // ===================================================
@@ -147,6 +152,9 @@ export default {
       c => !cartasExistentes.some(ec => ec.id === c.id)
     );
     this.cartas = [...cartasExistentes, ...nuevasCartas];
+
+    this.cartas = this.cartas.map(c => ({ seleccionada: false, ...c }));
+
 
   } else {
     this.usuarioActual = null;
@@ -252,7 +260,7 @@ export default {
     agregarCarta(nuevaCarta) {
       if (!this.usuarioActual) return;
       const id = nuevaCarta.id ?? Date.now();
-      const cartaFinal = { ...this.cartaTemplate, ...nuevaCarta, id };
+      const cartaFinal = { ...this.cartaTemplate, ...nuevaCarta, id,  seleccionada: false  };
       this.cartas.push(cartaFinal); // Modifica estado local
       this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
     },
@@ -263,6 +271,12 @@ export default {
       this.cartas = this.cartas.filter(c => c.id !== idCarta); // Modifica estado local
       this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
     },
+
+    actualizarSeleccionCartas(cartasActualizadas) {
+      this.cartas = cartasActualizadas;
+      this.actualizarYGuardarUsuarioActual();
+    },
+
 
 
     desbloquearKitsSegunProgreso() {
