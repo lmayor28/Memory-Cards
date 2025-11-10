@@ -3,8 +3,9 @@
     class="card"
     @click="handleClick"
     :modo-juego="modoJuego"
+    :class="claseCantidad"
   >
-    <!-- MODO JUEGO: muestra reverso o cara según carta.volteada/acertada -->
+   
     <div v-if="modoJuego">
 
   <!-- FRENTE (cuando está volteada) -->
@@ -40,7 +41,6 @@
           :checked="carta.seleccionada"
           @change.stop="$emit('toggle-seleccion', carta.id)"
         />
-        Seleccionar
       </label>
 
         <button
@@ -58,8 +58,9 @@ export default {
   name: "ObjectCard",
   props: {
     carta: { type: Object, required: true },
+    cantidad: Number,
     modoJuego: { type: Boolean, default: false },
-    reverso: { type: String, default: null } // opcional: ruta personalizada desde el padre
+    reverso: { type: String, default: null } 
   },
   computed: {
     reversoSrc() {
@@ -153,6 +154,19 @@ export default {
 }
 .btn-delete:hover { background-color: #ff4040; }
 
+
+
+.selector-carta input {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  border: 2px solid var(--celeste-primario);
+  border-radius: 10px;
+  background-color: var(--blanco);
+}
+
 /* Tamaño especial solo para modo juego */
 .card[modo-juego="true"] {
   width: 170px;
@@ -187,7 +201,7 @@ export default {
     font-size: 0.9rem;
   }
   .card[modo-juego="true"] .card-desc {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
   
 }
@@ -201,10 +215,10 @@ export default {
     height: 80px;
   }
   .card[modo-juego="true"] .card-title {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
   }
   .card[modo-juego="true"] .card-desc {
-    font-size: 0.6rem;
+    font-size: 0.5rem;
   }
 }
 
@@ -224,18 +238,36 @@ export default {
   }
 }
 
+@media (max-width: 425px) {
+  .card[modo-juego="true"]{
+    width: 60px;
+    height: 100px;
+    border: 2px solid var(--celeste-primario);
+  }
+  .card[modo-juego="true"] .card-img {
+    height: 50px;
+    border-bottom: 2px solid var(--celeste-primario);
+  }
+  .card[modo-juego="true"] .card-title {
+    font-size: 0.4rem;
+  }
+  .card[modo-juego="true"] .card-desc {
+    font-size: 0.3rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .card{
     width: 180px;
-    height: 250px;
+    height: 260px;
   }
   .card-img {
-    height: 130px;
+    height: 120px;
   }
   .card-title {
     font-size: 1rem;
-    margin-top: 1px;
-    margin-bottom: 0.5px;
+    margin-top: 0.5px;
+    margin-bottom: 0.2px;
   }
   .card-desc {
     font-size: 0.8rem;
@@ -245,38 +277,72 @@ export default {
 
 @media (max-width: 768px) {
   .card{
-    width: 140px;
+    width: 130px;
     height: 200px;
   }
   .card-img {
-    height: 100px;
+    height: 95px;
   }
   .card-title {
-    font-size: 0.9rem;
-    margin-top: 0.5px;
-    margin-bottom: 0.3px;
+    font-size: 0.7rem;
+    margin-top: 0.3px;
+    margin-bottom: 0.1px;
   }
   .card-desc {
+    font-size: 0.6rem;
+  }
+  .selector-carta input {
+    width: 20px;
+    height: 20px;
+  }
+  .btn-delete {
+    padding: 4px 7px;
     font-size: 0.7rem;
   }
-   
+
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .card{
-    width: 120px;
-    height: 170px;
+    width: 100px;
+    height: 165px;
   }
   .card-img {
     height: 80px;
   }
   .card-title {
-    font-size: 0.8rem;
-    margin-top: 0.3px;
-    margin-bottom: 0.2px;
+    font-size: 0.7rem;
+    margin-top: 0.2px;
+    margin-bottom: 0.1px;
   }
   .card-desc {
+    font-size: 0.5rem;
+  }
+  .selector-carta input {
+    width: 18px;
+    height: 18px;
+  }
+  .btn-delete {
+    padding: 3px 6px;
     font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .card{
+    width: 100px;
+    height: 150px;
+  }
+  .card-img {
+    height: 70px;
+  }
+  .card-title {
+    font-size: 0.7rem;
+    margin-top: 0.2px;
+    margin-bottom: 0.1px;
+  }
+  .card-desc {
+    font-size: 0.5rem;
   }
 }
 

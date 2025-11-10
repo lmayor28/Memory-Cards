@@ -22,7 +22,7 @@
     </div>
 
     <!-- 🃏 Tablero de cartas -->
-    <div v-if="!juegoTerminado" class="tablero">
+    <div v-if="!juegoTerminado" class="tablero" :class="{ nueveCols: modoNueveColumnas }">
       <ObjectCard
         v-for="(carta, index) in cartasEnJuego"
         :key="index"
@@ -74,6 +74,13 @@ export default {
   mounted() {
     this.iniciarJuego();
   },
+
+  computed: {
+  modoNueveColumnas() {
+    return this.cartasEnJuego.length >= 18; 
+  }
+},
+
 
   methods: {
     /* =======================================================
@@ -191,7 +198,7 @@ export default {
   border-radius: 12px;
   padding: 20px;
   max-width: 1200px;
-  width: 95%;
+  width: 98%;
   margin-inline: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -276,4 +283,97 @@ export default {
     gap: 6px; 
   }
 }
+
+@media (max-width: 425px) {
+  .tablero {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 3px; 
+  }
+}
+
+
+
+
+
+.tablero.nueveCols {
+  grid-template-columns: repeat(9, 1fr);
+}
+
+
+@media (min-width: 1025px) {
+  .tablero.nueveCols .card[modo-juego="true"] {
+    width: 120px;
+    height: 180px;
+    gap: 5px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-img {
+    height: 90px;
+  }
+  .tablero.nueveCols{
+    gap: 8px;
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .tablero.nueveCols .card[modo-juego="true"] {
+    width: 95px;
+    height: 150px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-img {
+    height: 45px;
+  }
+  .tablero.nueveCols{
+    gap: 6px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .tablero.nueveCols .card[modo-juego="true"] {
+    width: 70px;
+    height: 115px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-img {
+    height: 55px;
+  }
+  
+  .tablero.nueveCols{
+    gap: 4px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .tablero.nueveCols {
+    grid-template-columns: repeat(9, 1fr);
+    gap: 2px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] {
+    width: 53px;
+    height: 93px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-img {
+    height: 40px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-title {
+    font-size: 0.7rem;
+    margin-top: 8px;
+  }
+
+}
+
+@media (max-width: 425px) {
+  .tablero.nueveCols .card[modo-juego="true"] {
+    width: 35px;
+    height: 60px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-img {
+    height: 60px;
+  }
+  .tablero.nueveCols{
+    gap: 1px;
+  }
+}
+
 </style>

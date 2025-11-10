@@ -56,7 +56,8 @@ export default {
   props: {
     cartas: {
       type: Array,
-      required: true
+      required: true,
+      cantidad: Number
     }
   },
   data() {
@@ -84,24 +85,20 @@ export default {
       this.$emit("actualizar-seleccion", this.cartas);
     },
     seleccionarAleatorio(cantidad) {
-      // 1. Deseleccionamos todas
       this.cartas.forEach(c => (c.seleccionada = false));
 
-      // 2. Si pidió todas
       if (cantidad === 'todas') {
         this.cartas.forEach(c => (c.seleccionada = true));
       } else {
-        // 3. Clonamos y mezclamos aleatoriamente
         let mezcladas = [...this.cartas].sort(() => Math.random() - 0.5);
 
-        // 4. Tomamos las primeras X
+       
         let elegidas = mezcladas.slice(0, cantidad);
 
-        // 5. Las marcamos
+        
         elegidas.forEach(c => (c.seleccionada = true));
       }
 
-      // 6. Avisamos a App.vue (para guardar en localStorage)
       this.$emit("actualizar-seleccion", this.cartas);
     },
 
@@ -131,7 +128,7 @@ h2 {
   text-align: center;
   color: var(--celeste-oscuro);
   font-size: 2.6rem;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 
@@ -287,11 +284,66 @@ h2 {
 @media (max-width: 1024px) {
   .cards-grid {
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+
+  }
+  .botones-juego button {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+  .txtybtn button {
+    padding: 6px 10px;
+    font-size: 0.9rem;
   }
 }
 @media (max-width: 768px) {
   .cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 5px;
+  }
+  .botones-juego button {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+  }
+  .txtybtn button {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+  }
+  .txtybtn h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+  .botones-juego button {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+  }
+  .txtybtn button {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+  }
+  .txtybtn h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+  .botones-juego button {
+    padding: 3px 5px;
+    font-size: 0.6rem;
+  }
+  .txtybtn button {
+    padding: 3px 5px;
+    font-size: 0.6rem;
+  }
+  .txtybtn h2 {
+    font-size: 1.4rem;
   }
 }
 </style>

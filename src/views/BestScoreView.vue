@@ -1,6 +1,6 @@
 <template>
   <section class="best-score">
-    <h1>🏆 Mejores Puntajes</h1>
+    <h1>Mejores Puntajes</h1>
 
     <table v-if="topJugadores.length" class="tabla">
       <thead>
@@ -72,9 +72,22 @@ export default {
 }
 
 h1 {
-  color: #0277bd;
+  text-align: center;
+  color: var(--celeste-oscuro);
+  font-size: 2.6rem;
   margin-bottom: 20px;
 }
+@media (max-width: 600px) {
+  .best-score {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+}
+
 
 .tabla {
   margin: 0 auto;

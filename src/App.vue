@@ -21,7 +21,7 @@
       />
     </router-view>
   </main>
-  <CFooter />
+  <CFooter v-if="$route.name !== 'game'"/>
 </template>
 
 <script>
@@ -38,7 +38,7 @@ export default {
       cartaTemplate: { id: null, nombre: '', descripcion: '', imagen: '', isHide: true, isCopied: false },
       partidaTemplate: { id: null, puntuacion: 0, fechaInicio: '', tiempoFinal: '', aciertos: 0.0 },
 
-      // Estado central
+      
       usuarioActual: null,
       cartas: [],
     cartasBase:[
@@ -181,7 +181,7 @@ export default {
       }
 
       this.cartas = this.usuarioActual.cartas || [];
-      this.guardarSesionUsuarioActual(); // Guarda solo la sesión activa
+      this.guardarSesionUsuarioActual(); 
 
       // No es necesario guardar allUsers aquí, ya está actualizado
 
@@ -256,20 +256,20 @@ export default {
       this.guardarListaUsuarios();
     },
 
-    // Se llama cuando AddCardView emite @agregar-carta
+    
     agregarCarta(nuevaCarta) {
       if (!this.usuarioActual) return;
       const id = nuevaCarta.id ?? Date.now();
       const cartaFinal = { ...this.cartaTemplate, ...nuevaCarta, id,  seleccionada: false  };
-      this.cartas.push(cartaFinal); // Modifica estado local
-      this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
+      this.cartas.push(cartaFinal); 
+      this.actualizarYGuardarUsuarioActual(); 
     },
 
-    // Se llama cuando CardsView emite @eliminar-carta
+  
     eliminarCarta(idCarta) {
       if (!this.usuarioActual) return;
-      this.cartas = this.cartas.filter(c => c.id !== idCarta); // Modifica estado local
-      this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
+      this.cartas = this.cartas.filter(c => c.id !== idCarta); 
+      this.actualizarYGuardarUsuarioActual(); 
     },
 
     actualizarSeleccionCartas(cartasActualizadas) {
@@ -319,7 +319,7 @@ export default {
         this.cartas = cartasFinales;
       },
 
-    // Se llama cuando GameView emite @agregar-partida
+   
     agregarPartida(nuevaPartida) {
       if (!this.usuarioActual) return;
       const partidaConId = { ...this.partidaTemplate, ...nuevaPartida, id: Date.now() };
@@ -329,7 +329,7 @@ export default {
       }
       this.usuarioActual.partidas.push(partidaConId); // Modifica directo el objeto
 
-      this.desbloquearKitsSegunProgreso();// 🔹 Revisa si debe desbloquear nuevos kits
+      this.desbloquearKitsSegunProgreso();// 
 
       this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
     },
