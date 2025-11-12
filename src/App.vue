@@ -284,10 +284,10 @@ export default {
 
         const niveles = [
           { partidas: 0, categoria: 'Halloween' },
-          { partidas: 5, categoria: 'Animales' },
-          { partidas: 15, categoria: 'Personajes de Marvel' },
-          { partidas: 20, categoria: 'Plantas (PvZ)' },
-          { partidas: 25, categoria: 'Objetos Random' },
+          { partidas: 6, categoria: 'Animales' },
+          { partidas: 12, categoria: 'Personajes de Marvel' },
+          { partidas: 18, categoria: 'Plantas (PvZ)' },
+          { partidas: 24, categoria: 'Objetos Random' },
           { partidas: 30, categoria: 'Personajes de DC' },
         ];
 
