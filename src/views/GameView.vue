@@ -294,10 +294,10 @@ export default {
 
 
 
-
+/* 
 .tablero.nueveCols {
   grid-template-columns: repeat(9, 1fr);
-}
+} */
 
 
 @media (min-width: 1025px) {
@@ -311,6 +311,7 @@ export default {
   }
   .tablero.nueveCols{
     gap: 8px;
+    grid-template-columns: repeat(9, 1fr);
   }
 }
 
@@ -325,54 +326,113 @@ export default {
   }
   .tablero.nueveCols{
     gap: 6px;
+    grid-template-columns: repeat(9, 1fr);
   }
 }
 
 
 @media (max-width: 768px) {
   .tablero.nueveCols .card[modo-juego="true"] {
-    width: 70px;
-    height: 115px;
+    width: 100px;
+    height: 160px;
   }
   .tablero.nueveCols .card[modo-juego="true"] .card-img {
-    height: 55px;
+    height: 80px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-title {
+    font-size: 0.6rem;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-desc {
+    font-size: 0.5rem;
   }
   
   .tablero.nueveCols{
     gap: 4px;
+    grid-template-columns: repeat(6, 1fr);
   }
 }
 
 
 @media (max-width: 600px) {
   .tablero.nueveCols {
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 2px;
   }
   .tablero.nueveCols .card[modo-juego="true"] {
-    width: 53px;
-    height: 93px;
+    width: 80px;
+    height: 130px;
   }
   .tablero.nueveCols .card[modo-juego="true"] .card-img {
-    height: 40px;
+    height: 60px;
   }
   .tablero.nueveCols .card[modo-juego="true"] .card-title {
-    font-size: 0.7rem;
-    margin-top: 8px;
+    font-size: 0.6rem;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-desc {
+    font-size: 0.5rem;
   }
 
 }
 
 @media (max-width: 425px) {
   .tablero.nueveCols .card[modo-juego="true"] {
-    width: 35px;
-    height: 60px;
+    width: 60px;
+    height: 100px;
+    border: 2px solid var(--celeste-primario);
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-img {
+    height: 50px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-title {
+    font-size: 0.4rem;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-desc {
+    font-size: 0.3rem;
+  }
+  .tablero.nueveCols{
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+  }
+}
+
+@media (max-width: 375px) {
+  .tablero.nueveCols {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] {
+    width: 60px;
+    height: 100px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-img {
+    height: 50px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-title {
+    font-size: 0.2rem;
+    margin: 0;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-desc {
+    font-size: 0.1rem;
+  }
+}
+@media (max-width: 320px) {
+  .tablero.nueveCols {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] {
+    width: 60px;
+    height: 100px;
   }
   .tablero.nueveCols .card[modo-juego="true"] .card-img {
     height: 60px;
   }
-  .tablero.nueveCols{
-    gap: 1px;
+  .tablero.nueveCols .card[modo-juego="true"] .card-title {
+    font-size: 0.2rem;
+    margin: 0;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-desc {
+    font-size: 0.1rem;
   }
 }
 

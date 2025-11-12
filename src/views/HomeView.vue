@@ -16,20 +16,32 @@
     </div>
   </div>
 
-  <div class="explicacion">
-    <h3>¿Cómo se Juega?</h3>
-    <p>
-      El objetivo es simple: encontrar la pareja de cada carta con la
-      <strong>"mínima cantidad de movimientos"</strong> y en el
-      <strong>"menor tiempo posible"</strong>.
-    </p>
-    <p>
-      Una vez finalizada la partida, puedes revisar tus resultados en
-      <router-link to="/estadisticas">Estadísticas</router-link> y verificar tu
-      máxima puntuación en
-      <router-link to="/mejor-puntaje">Mejor Puntuación</router-link>.
-    </p>
-  </div>
+<div class="explicacion">
+  <h3>¿Cómo se juega?</h3>
+  <p>
+    Antes de comenzar, debes seleccionar al menos <strong>dos cartas</strong>. 
+    Una vez elegidas, podrás iniciar la partida. 
+    Si quieres una carta única y personalizada, puedes crearla desde 
+    <router-link to="/agregar-carta">Agregar Cartas</router-link>.
+  </p>
+
+  <p>
+    El objetivo del juego es <strong>encontrar las parejas de cartas</strong> 
+    usando la <strong>menor cantidad de movimientos</strong> posible 
+    y en el <strong>menor tiempo</strong>. 
+    Durante la partida, las cartas se irán volteando cada vez que las selecciones, 
+    y deberás memorizar su posición para formar las parejas correctas.
+  </p>
+
+  <p>
+    Al finalizar, podrás consultar tus resultados y desempeño en 
+    <router-link to="/estadisticas">Estadísticas</router-link>, 
+    donde verás tus partidas y progreso, 
+    y también revisar tus mejores logros en 
+    <router-link to="/mejor-puntaje">Mejores Puntajes</router-link>.
+  </p>
+</div>
+
 </template>
 
 <script>

@@ -6,12 +6,13 @@
     </button> 
 
     <div class="links" :class="{ abierto: menuAbierto }">
-      <router-link to="/">Inicio</router-link>
-      <router-link to="/juego">Jugar</router-link>
-      <router-link to="/cartas">Cartas</router-link>
-      <router-link to="/estadisticas">Estadísticas</router-link>
-      <router-link to="/mejor-puntaje">Mejores Puntajes</router-link>
-      <router-link to="/agregar-carta">Agregar Cartas</router-link>
+      <router-link to="/" @click="menuAbierto = false">Inicio</router-link>
+      <router-link to="/juego" @click="menuAbierto = false">Jugar</router-link>
+      <router-link to="/cartas" @click="menuAbierto = false">Cartas</router-link>
+      <router-link to="/estadisticas" @click="menuAbierto = false">Estadísticas</router-link>
+      <router-link to="/mejor-puntaje" @click="menuAbierto = false">Mejores Puntajes</router-link>
+      <router-link to="/agregar-carta" @click="menuAbierto = false">Agregar Cartas</router-link>
+
     </div>
 
     <!-- 🔹 Estado del usuario -->
