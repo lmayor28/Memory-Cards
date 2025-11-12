@@ -22,7 +22,9 @@
     Antes de comenzar, debes seleccionar al menos <strong>dos cartas</strong>. 
     Una vez elegidas, podrás iniciar la partida. 
     Si quieres una carta única y personalizada, puedes crearla desde 
-    <router-link to="/agregar-carta">Agregar Cartas</router-link>.
+    <router-link to="/agregar-carta">Agregar Cartas</router-link>. Cada ves que juegues, 
+    tendrás la opción de usar tus cartas personalizadas o las predeterminadas que se iran 
+    desbloqueando cada 6 partidas realizadas.
   </p>
 
   <p>
