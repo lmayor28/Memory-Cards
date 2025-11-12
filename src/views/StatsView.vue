@@ -14,14 +14,14 @@
       <p><strong>Posición global:</strong> {{ posicionRanking }}</p>
         </div>
       <!-- 🆕 NUEVO: Tabla con el historial de partidas -->
-       <div class="historial-partidas">
+      <div class="historial-partidas">
       <h3>📜 Historial de partidas</h3>
       <table class="tabla">
         <thead>
           <tr>
             <th>#</th>
             <th>Fecha</th>
-            <th>Aciertos</th>
+            <th>Cartas Jugadas</th>
             <th>Tiempo (s)</th>
             <th>Puntaje</th>
           </tr>
@@ -35,7 +35,7 @@
             <td>{{ partida.fechaInicio }}</td>
             <td>{{ partida.aciertos }}</td>
             <td>{{ partida.tiempoFinal }}</td>
-            <td>{{ calcularPuntajeIncremental(partida).toFixed(2) }}</td>
+            <td>{{ partida.puntuacion.toFixed(2) }}</td>
           </tr>
         </tbody>
       </table>
@@ -75,7 +75,7 @@ export default {
     mejorPuntaje() {
       if (!this.usuarioActual.partidas.length) return 0;
       const calculados = this.usuarioActual.partidas.map((p) =>
-        this.calcularPuntajeIncremental(p)
+        p.puntuacion
       );
       return Math.max(...calculados);
     },
@@ -85,7 +85,7 @@ export default {
       const ranking = this.usuarios
         .map((u) => {
           const mejores = u.partidas.map((p) =>
-            this.calcularPuntajeIncremental(p)
+            p.puntuacion
           );
           return {
             id: u.id,
@@ -108,15 +108,6 @@ export default {
       );
     }
   },
-
-  methods: {
-    // 🧮 Nueva fórmula incremental
-    calcularPuntajeIncremental(partida) {
-      const aciertos = partida.aciertos || 0;
-      const tiempo = partida.tiempoFinal || 1;
-      return (aciertos * 100) + ((100 * aciertos) / (tiempo + 1));
-    }
-  }
 };
 </script>
 
@@ -245,7 +236,7 @@ tr:hover {
 
 
 @media (max-width: 768px) {
-   .stats-view {
+  .stats-view {
     padding: 30px;
     max-width: 95%;
   }
