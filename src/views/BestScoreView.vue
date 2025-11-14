@@ -8,7 +8,7 @@
           <th>#</th>
           <th>Jugador</th>
           <th>Puntaje</th>
-          <th>Aciertos</th>
+          <th>Cartas Jugadas</th>
           <th>Tiempo (s)</th>
         </tr>
       </thead>
@@ -44,7 +44,7 @@ export default {
           id: u.id,
           nombreUsuario: u.nombreUsuario,
           ...p,
-          mejorPuntaje: this.calcularPuntajePersonalizado(p)
+          mejorPuntaje: p.puntuacion
         }))
       );
 
@@ -54,13 +54,6 @@ export default {
     }
   },
 
-  methods: {
-    calcularPuntajePersonalizado(partida) {
-      const aciertos = partida.aciertos || 0;
-      const tiempo = partida.tiempoFinal || 1;
-      return (aciertos * 100) + ((100 * aciertos) / (tiempo + 1));
-    }
-  }
 };
 </script>
 

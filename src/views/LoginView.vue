@@ -9,9 +9,9 @@
 
       <!-- Campos extra solo al registrarse -->
       <div v-if="modoRegistro">
-        <input v-model="usuario.nombre" type="text" placeholder="Nombre" required />
-        <input v-model="usuario.apellido" type="text" placeholder="Apellido" required />
-        <input v-model="usuario.email" type="email" placeholder="Correo electrónico" required />
+        <input v-model="usuario.nombre" type="text" placeholder="Nombre" />
+        <input v-model="usuario.apellido" type="text" placeholder="Apellido" />
+        <input v-model="usuario.email" type="email" placeholder="Correo electrónico" />
       </div>
 
       <!-- Botón principal -->

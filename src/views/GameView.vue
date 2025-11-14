@@ -77,7 +77,7 @@ export default {
 
   computed: {
   modoNueveColumnas() {
-    return this.cartasEnJuego.length >= 18; 
+    return this.cartasEnJuego.length >= 18;
   }
 },
 
@@ -153,9 +153,28 @@ export default {
 
       // 🧮 Nueva fórmula de puntuación incremental:
       // más aciertos → más puntos / menos tiempo → más puntos
-      this.puntuacionFinal =
-        (this.aciertos * 100) + ((100 * this.aciertos) / (this.tiempo + 1));
+            // --- Define tus constantes del juego ---
+      const PUNTOS_POR_ACIERTO = 100;
+      const FACTOR_COMPLEJIDAD = 1.5;
+      // Multiplicador del porcentaje. 1.0 = un 100% de ahorro te da
+      // un 100% extra de puntos base.
+      const FACTOR_BONO_PCT = 1.0;
 
+      // --- Cálculo en tu función ---
+
+      let puntajeBase = this.aciertos * PUNTOS_POR_ACIERTO;
+      let tiempoObjetivo = (this.aciertos * this.aciertos) * FACTOR_COMPLEJIDAD;
+
+      // 1. Calculamos qué tan "bueno" fue el tiempo en porcentaje (de 0.0 a 1.0)
+      // Si tiempo < tiempoObjetivo, esto es positivo.
+      let eficiencia = (tiempoObjetivo - this.tiempo) / tiempoObjetivo;
+
+      // 2. El bono es un porcentaje del puntaje base
+      // (Nos aseguramos que el bono no sea negativo si se pasó del tiempo)
+      let bonoDeTiempo = puntajeBase * Math.max(0, eficiencia) * FACTOR_BONO_PCT;
+
+      this.puntuacionFinal = puntajeBase + bonoDeTiempo;
+      console.log(this.puntuacionFinal)
       const nuevaPartida = {
         id: Date.now(),
         puntuacion: this.puntuacionFinal,
@@ -275,19 +294,19 @@ export default {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 8px;
   }
-    
+
 }
 @media (max-width: 600px) {
   .tablero {
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 6px; 
+    gap: 6px;
   }
 }
 
 @media (max-width: 425px) {
   .tablero {
     grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    gap: 3px; 
+    gap: 3px;
   }
 }
 
@@ -350,7 +369,7 @@ export default {
   .tablero.nueveCols .card[modo-juego="true"] .card-desc {
     font-size: 0.5rem;
   }
-  
+
   .tablero.nueveCols{
     gap: 4px;
     grid-template-columns: repeat(6, 1fr);
