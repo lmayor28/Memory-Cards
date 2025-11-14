@@ -168,25 +168,26 @@ export default {
 }
 
 /* Tamaño especial solo para modo juego */
+@media (max-width: 1440px) {
 .card[modo-juego="true"] {
   width: 170px;
   height: 270px;
 }
 
 .card[modo-juego="true"] .card-img {
-  height: 140px;
+  height: 120px;
 }
 
 .card[modo-juego="true"] .card-title {
-  font-size: 1rem;
+  font-size: 0.8rem;
+  margin-top: 0.4px;
+  margin-bottom: 0.2px;
 }
 
 .card[modo-juego="true"] .card-desc {
-  font-size: 0.9rem;
+  font-size: 0.6rem;
 }
-.card[modo-juego="true"] .card-title{
-  margin-top: 2px;
-  margin-bottom: 2px;
+
 }
 
 @media (max-width: 1024px) {
@@ -195,13 +196,16 @@ export default {
     height: 220px;
   }
   .card[modo-juego="true"] .card-img {
-    height: 120px;
+    height: 90px;
   }
   .card[modo-juego="true"] .card-title {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    margin-top: 0.3px;
+    margin-bottom: 0.2rem;
   }
   .card[modo-juego="true"] .card-desc {
-    font-size: 0.7rem;
+    font-size: 0.5rem;
+    margin-top: 0.3rem;
   }
   
 }

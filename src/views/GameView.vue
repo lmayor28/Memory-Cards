@@ -196,8 +196,8 @@ export default {
   margin-top: 40px;
   background-color: #f8fbff;
   border-radius: 12px;
-  padding: 20px;
-  max-width: 1200px;
+  padding: 10px;
+  max-width: auto;
   width: 98%;
   margin-inline: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -294,23 +294,28 @@ export default {
 
 
 
-/* 
-.tablero.nueveCols {
-  grid-template-columns: repeat(9, 1fr);
-} */
 
 
-@media (min-width: 1025px) {
+
+@media (max-width: 1440px) {
   .tablero.nueveCols .card[modo-juego="true"] {
-    width: 120px;
-    height: 180px;
-    gap: 5px;
+    width: 130px;
+    height: 210px;
   }
   .tablero.nueveCols .card[modo-juego="true"] .card-img {
-    height: 90px;
+    height: 60px;
+  }
+
+  .tablero.nueveCols .card[modo-juego="true"] .card-title {
+    font-size: 0.5rem;
+    margin-bottom: 0px;
+  }
+  .tablero.nueveCols .card[modo-juego="true"] .card-desc {
+    margin-top: 0px;
+    font-size: 0.4rem;
   }
   .tablero.nueveCols{
-    gap: 8px;
+    gap: 3px;
     grid-template-columns: repeat(9, 1fr);
   }
 }
@@ -318,14 +323,14 @@ export default {
 
 @media (max-width: 1024px) {
   .tablero.nueveCols .card[modo-juego="true"] {
-    width: 95px;
-    height: 150px;
+    width: 100px;
+    height: 170px;
   }
   .tablero.nueveCols .card[modo-juego="true"] .card-img {
     height: 45px;
   }
   .tablero.nueveCols{
-    gap: 6px;
+    gap: 4px;
     grid-template-columns: repeat(9, 1fr);
   }
 }
