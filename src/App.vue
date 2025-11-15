@@ -38,13 +38,13 @@ export default {
       cartaTemplate: { id: null, nombre: '', descripcion: '', imagen: '', isHide: true, isCopied: false },
       partidaTemplate: { id: null, puntuacion: 0, fechaInicio: '', tiempoFinal: '', aciertos: 0.0 },
 
-      
+
       usuarioActual: null,
       cartas: [],
     cartasBase:[
-          { id: 1, nombre: 'Pikachu', descripcion: 'El ratón eléctrico más adorable y peligroso del planeta.', imagen: '../public/img/pikachu.webp', isHide: true, isCopied: false },
-          { id: 2, nombre: 'Iron Man', descripcion: 'Genio, millonario, playboy y filántropo... con una armadura brillante.', imagen: '../public/img/IronMan.jpg', isHide: true, isCopied: false },
-          { id: 3, nombre: 'Albus Dumbledore', descripcion: 'El director de Hogwarts y uno de los magos más poderosos de todos los tiempos.', imagen: '../public/img/Albus.jpg', isHide: true, isCopied: false },
+          { id: 1, nombre: 'Pikachu', descripcion: 'El ratón eléctrico más adorable y peligroso del planeta.', imagen: 'img/pikachu.webp', isHide: true, isCopied: false },
+          { id: 2, nombre: 'Iron Man', descripcion: 'Genio, millonario, playboy y filántropo... con una armadura brillante.', imagen: '/img/IronMan.jpg', isHide: true, isCopied: false },
+          { id: 3, nombre: 'Albus Dumbledore', descripcion: 'El director de Hogwarts y uno de los magos más poderosos de todos los tiempos.', imagen: '/img/Albus.jpg', isHide: true, isCopied: false },
           { id: 4, nombre: 'Legolas', descripcion: 'El elfo que nunca falla un disparo y siempre tiene el cabello perfecto.', imagen: '../public/img/Legolas.jpg', isHide: true, isCopied: false },
           { id: 5, nombre: 'Niffler', descripcion: 'Criatura adorable con una peligrosa obsesión por los objetos brillantes.', imagen: '../public/img/niffler.jpg', isHide: true, isCopied: false },
           { id: 6, nombre: 'Gandalf el Gris', descripcion: 'Hechicero milenario con una extraña afición a desaparecer cuando más se lo necesita.', imagen: '../public/img/gandalf.jpg', isHide: true, isCopied: false }
@@ -122,7 +122,7 @@ export default {
     }
   },
 
-  
+
 
 
   methods: {
@@ -181,7 +181,7 @@ export default {
       }
 
       this.cartas = this.usuarioActual.cartas || [];
-      this.guardarSesionUsuarioActual(); 
+      this.guardarSesionUsuarioActual();
 
       // No es necesario guardar allUsers aquí, ya está actualizado
 
@@ -256,20 +256,20 @@ export default {
       this.guardarListaUsuarios();
     },
 
-    
+
     agregarCarta(nuevaCarta) {
       if (!this.usuarioActual) return;
       const id = nuevaCarta.id ?? Date.now();
       const cartaFinal = { ...this.cartaTemplate, ...nuevaCarta, id,  seleccionada: false  };
-      this.cartas.push(cartaFinal); 
-      this.actualizarYGuardarUsuarioActual(); 
+      this.cartas.push(cartaFinal);
+      this.actualizarYGuardarUsuarioActual();
     },
 
-  
+
     eliminarCarta(idCarta) {
       if (!this.usuarioActual) return;
-      this.cartas = this.cartas.filter(c => c.id !== idCarta); 
-      this.actualizarYGuardarUsuarioActual(); 
+      this.cartas = this.cartas.filter(c => c.id !== idCarta);
+      this.actualizarYGuardarUsuarioActual();
     },
 
     actualizarSeleccionCartas(cartasActualizadas) {
@@ -291,14 +291,14 @@ export default {
           { partidas: 30, categoria: 'Personajes de DC' },
         ];
 
-   
+
 
 
         const categoriasDesbloqueadas = niveles
           .filter(n => partidasTotales >= n.partidas)
           .map(n => n.categoria);
 
-        
+
 
         const nuevosKits = this.kits.filter(k =>
           categoriasDesbloqueadas.includes(k.categoria)
@@ -306,7 +306,7 @@ export default {
 
         const nuevasCartas = nuevosKits.flatMap(k => k.cartas);
 
-        
+
         const cartasExistentes = this.usuarioActual.cartas || [];
         const cartasFinales = [
           ...cartasExistentes,
@@ -319,7 +319,7 @@ export default {
         this.cartas = cartasFinales;
       },
 
-   
+
     agregarPartida(nuevaPartida) {
       if (!this.usuarioActual) return;
       const partidaConId = { ...this.partidaTemplate, ...nuevaPartida, id: Date.now() };
@@ -329,7 +329,7 @@ export default {
       }
       this.usuarioActual.partidas.push(partidaConId); // Modifica directo el objeto
 
-      this.desbloquearKitsSegunProgreso();// 
+      this.desbloquearKitsSegunProgreso();//
 
       this.actualizarYGuardarUsuarioActual(); // Sincroniza y guarda todo
     },
