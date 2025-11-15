@@ -11,6 +11,7 @@
         :usuarios="allUsers"
 
 
+
         @login-exitoso="manejarLoginExitoso"
         @registrar-usuario="registrarNuevoUsuario"
         @agregar-carta="agregarCarta"
