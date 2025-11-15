@@ -10,7 +10,7 @@
         :cartas="cartas"
         :usuarios="allUsers"
 
-
+ 
 
 
         @login-exitoso="manejarLoginExitoso"
