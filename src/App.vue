@@ -25,6 +25,7 @@
 </template>
 
 <script>
+
 import CFooter from './components/CFooter.vue'
 import CNavbar from './components/CNavbar.vue';
 
