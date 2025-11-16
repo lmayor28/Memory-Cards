@@ -87,7 +87,15 @@ export default {
         this.$emit('login-exitoso', user)
 
         // Navegar al inicio
-        this.$router.push('/')
+        setTimeout(() => {
+          this.$router.push('/');
+
+          
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+
+        }, 300);
         return
       }
 
@@ -133,8 +141,17 @@ export default {
       this.error = ''
       this.mensaje = `¡Cuenta creada exitosamente! Bienvenido, ${nuevoUsuario.nombreUsuario}`
 
-      this.$router.push('/')
-    }
+
+      setTimeout(() => {
+      this.$router.push('/');
+
+      
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
+
+    }, 300);
+        }
   }
 }
 </script>

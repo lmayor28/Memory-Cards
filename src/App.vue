@@ -48,7 +48,7 @@ export default {
           { id: 1, nombre: 'Pikachu', descripcion: 'El ratón eléctrico más adorable y peligroso del planeta.', imagen: 'img/pikachu.webp', isHide: true, isCopied: false },
           { id: 2, nombre: 'Iron Man', descripcion: 'Genio, millonario, playboy y filántropo... con una armadura brillante.', imagen: '/img/IronMan.jpg', isHide: true, isCopied: false },
           { id: 3, nombre: 'Albus Dumbledore', descripcion: 'El director de Hogwarts y uno de los magos más poderosos de todos los tiempos.', imagen: '/img/Albus.jpg', isHide: true, isCopied: false },
-          { id: 4, nombre: 'Legolas', descripcion: 'El elfo que nunca falla un disparo y siempre tiene el cabello perfecto.', imagen: '/img/Legolas.jpg', isHide: true, isCopied: false },
+          { id: 4, nombre: 'Legolas', descripcion: 'El elfo que nunca falla un disparo y siempre tiene el cabello perfecto.', imagen: '/img/legolas.jpg', isHide: true, isCopied: false },
           { id: 5, nombre: 'Niffler', descripcion: 'Criatura adorable con una peligrosa obsesión por los objetos brillantes.', imagen: '/img/niffler.jpg', isHide: true, isCopied: false },
           { id: 6, nombre: 'Gandalf el Gris', descripcion: 'Hechicero milenario con una extraña afición a desaparecer cuando más se lo necesita.', imagen: '/img/gandalf.jpg', isHide: true, isCopied: false }
         ],
@@ -283,44 +283,49 @@ export default {
 
 
     desbloquearKitsSegunProgreso() {
-        const partidasTotales = this.usuarioActual.partidas.length;
+       const partidasTotales = this.usuarioActual.partidas.length;
 
-        const niveles = [
-          { partidas: 0, categoria: 'Halloween' },
-          { partidas: 6, categoria: 'Animales' },
-          { partidas: 12, categoria: 'Personajes de Marvel' },
-          { partidas: 18, categoria: 'Plantas (PvZ)' },
-          { partidas: 24, categoria: 'Objetos Random' },
-          { partidas: 30, categoria: 'Personajes de DC' },
-        ];
+      const niveles = [
+        { partidas: 0, categoria: 'Halloween' },
+        { partidas: 6, categoria: 'Animales' },
+        { partidas: 12, categoria: 'Personajes de Marvel' },
+        { partidas: 18, categoria: 'Plantas (PvZ)' },
+        { partidas: 24, categoria: 'Objetos Random' },
+        { partidas: 30, categoria: 'Personajes de DC' },
+      ];
 
+      const categoriasDesbloqueadas = niveles
+        .filter(n => partidasTotales >= n.partidas)
+        .map(n => n.categoria);
 
+      const nuevosKits = this.kits.filter(k =>
+        categoriasDesbloqueadas.includes(k.categoria)
+      );
 
+      const nuevasCartas = nuevosKits.flatMap(k => k.cartas);
 
-        const categoriasDesbloqueadas = niveles
-          .filter(n => partidasTotales >= n.partidas)
-          .map(n => n.categoria);
+      const cartasExistentes = this.usuarioActual.cartas || [];
 
+      
+      const cartasQueAparecenAhora = nuevasCartas.filter(
+        c => !cartasExistentes.some(ec => ec.id === c.id)
+      );
 
+      const cartasFinales = [
+        ...cartasExistentes,
+        ...cartasQueAparecenAhora
+      ];
 
-        const nuevosKits = this.kits.filter(k =>
-          categoriasDesbloqueadas.includes(k.categoria)
-        );
+      this.usuarioActual.cartas = cartasFinales;
+      this.cartas = cartasFinales;
 
-        const nuevasCartas = nuevosKits.flatMap(k => k.cartas);
-
-
-        const cartasExistentes = this.usuarioActual.cartas || [];
-        const cartasFinales = [
-          ...cartasExistentes,
-          ...nuevasCartas.filter(
-            c => !cartasExistentes.some(ec => ec.id === c.id)
-          ),
-        ];
-
-        this.usuarioActual.cartas = cartasFinales;
-        this.cartas = cartasFinales;
-      },
+      
+      if (cartasQueAparecenAhora.length > 0) {
+        alert("¡Nuevas cartas desbloqueadas!");
+        
+        setTimeout(() => window.location.reload(), 500);
+      }
+    },
 
 
     agregarPartida(nuevaPartida) {
