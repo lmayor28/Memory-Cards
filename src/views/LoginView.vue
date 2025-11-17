@@ -2,7 +2,7 @@
   <div class="login">
     <h1>🔐 Iniciar Sesión / Registrarse</h1>
 
-    <form @submit="manejarUsuario">
+    <form @submit.prevent="manejarUsuario">
       <!-- Campos de datos -->
       <input v-model="usuario.nombreUsuario" type="text" placeholder="Nombre de usuario" required />
       <input v-model="usuario.contraseña" type="password" placeholder="Contraseña" required />
@@ -89,6 +89,7 @@ export default {
 
         // Navegar al inicio
         this.$router.push('/')
+        window.location.reload()
         return
       }
 
@@ -113,6 +114,7 @@ export default {
       if (existe) {
         this.error = 'El usuario o correo ya están registrados.'
         this.mensaje = ''
+        window.location.reload()
         return
       }
 
@@ -132,6 +134,7 @@ export default {
       this.error = ''
 
       this.$router.push('/')
+      window.location.reload()
     }
   }
 }
