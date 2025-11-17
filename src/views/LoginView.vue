@@ -2,7 +2,7 @@
   <div class="login">
     <h1>🔐 Iniciar Sesión / Registrarse</h1>
 
-    <form @submit.prevent="manejarUsuario">
+    <form @submit="manejarUsuario">
       <!-- Campos de datos -->
       <input v-model="usuario.nombreUsuario" type="text" placeholder="Nombre de usuario" required />
       <input v-model="usuario.contraseña" type="password" placeholder="Contraseña" required />
@@ -51,6 +51,7 @@ export default {
         cartas: [],
         partidas: []
       },
+
       modoRegistro: false, // false = login / true = registro
       mensaje: '',
       error: ''
@@ -61,11 +62,13 @@ export default {
     manejarUsuario() {
       const usuarios = JSON.parse(localStorage.getItem('usuarios')) || []
 
-      // =========================================================
+      // ---------------------------
       // 🔹 MODO LOGIN
-      // =========================================================
+      // ---------------------------
       if (!this.modoRegistro) {
-        const user = usuarios.find(u => u.nombreUsuario === this.usuario.nombreUsuario)
+        const user = usuarios.find(
+          (u) => u.nombreUsuario === this.usuario.nombreUsuario
+        )
 
         if (!user) {
           this.error = 'Usuario no encontrado. Cambia a "Registrarse".'
@@ -80,28 +83,27 @@ export default {
         }
 
         // ✅ Iniciar sesión
-        this.error = ''
+        localStorage.setItem('usuario', JSON.stringify(user))
         this.mensaje = `¡Bienvenido de nuevo, ${user.nombreUsuario}!`
+        this.error = ''
 
-        // 🟩 Nuevo: Emitimos el evento hacia App.vue
-        this.$emit('login-exitoso', user)
-
-        // Navegar al inicio
         this.$router.push('/')
+          .then(() => {
+            setTimeout(() => {
+              window.location.reload()
+            }, 50)
+          })
+
         return
       }
 
-      // =========================================================
-      // 🔹 MODO REGISTRO
-      // =========================================================
-      if (
-        !this.usuario.nombre ||
-        !this.usuario.apellido ||
-        !this.usuario.email ||
-        !this.usuario.nombreUsuario ||
-        !this.usuario.contraseña
-      ) {
-        this.error = 'Por favor completa todos los campos.'
+      // ---------------------------
+      // 🔹 MODO REGISTRO (modificado)
+      // ---------------------------
+
+      // Solo se requiere nombreUsuario y contraseña
+      if (!this.usuario.nombreUsuario || !this.usuario.contraseña) {
+        this.error = 'El nombre de usuario y la contraseña son obligatorios.'
         this.mensaje = ''
         return
       }
@@ -110,7 +112,7 @@ export default {
       const existe = usuarios.find(
         (u) =>
           u.nombreUsuario === this.usuario.nombreUsuario ||
-          u.email === this.usuario.email
+          (this.usuario.email && u.email === this.usuario.email)
       )
 
       if (existe) {
@@ -119,7 +121,7 @@ export default {
         return
       }
 
-      // 🆕 Crear un nuevo usuario con estructura completa
+      // Crea el nuevo usuario (campos opcionales)
       const nuevoUsuario = {
         ...this.usuario,
         id: Date.now(),
@@ -127,13 +129,16 @@ export default {
         partidas: []
       }
 
-      // 🟩 Nuevo: Emitimos el evento hacia App.vue
-      this.$emit('registrar-usuario', nuevoUsuario)
+      usuarios.push(nuevoUsuario)
+      localStorage.setItem('usuarios', JSON.stringify(usuarios))
+      localStorage.setItem('usuario', JSON.stringify(nuevoUsuario))
 
-      this.error = ''
       this.mensaje = `¡Cuenta creada exitosamente! Bienvenido, ${nuevoUsuario.nombreUsuario}`
+      this.error = ''
 
-      this.$router.push('/')
+      setTimeout(() => {
+        this.$router.push('/')
+      }, 1500)
     }
   }
 }
