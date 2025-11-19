@@ -81,11 +81,34 @@ h1 {
   }
 }
 
+@media (max-width: 375px) {
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+  .tabla th,
+  .tabla td {
+    padding: 6px;
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 320px) {
+  h1 {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+  .tabla th,
+  .tabla td {
+    padding: 4px;
+    font-size: 0.8rem;
+  }
+}
+
 
 .tabla {
   margin: 0 auto;
   border-collapse: collapse;
-  width: 90%;
+  width: 98%;
   background-color: white;
   border-radius: 8px;
   overflow: hidden;
