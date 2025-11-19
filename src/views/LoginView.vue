@@ -4,8 +4,8 @@
 
     <form @submit.prevent="manejarUsuario">
       <!-- Campos de datos -->
-      <input v-model="usuario.nombreUsuario" type="text" placeholder="Nombre de usuario" required />
-      <input v-model="usuario.contraseña" type="password" placeholder="Contraseña" required />
+      <input v-model="usuario.nombreUsuario" type="text" placeholder="Nombre de usuario *" required />
+      <input v-model="usuario.contraseña" type="password" placeholder="Contraseña *" required />
 
       <!-- Campos extra solo al registrarse -->
       <div v-if="modoRegistro">
@@ -13,6 +13,8 @@
         <input v-model="usuario.apellido" type="text" placeholder="Apellido" />
         <input v-model="usuario.email" type="email" placeholder="Correo electrónico" />
       </div>
+
+      <p v-if="modoRegistro">* Campos obligatorios</p>
 
       <!-- Botón principal -->
       <button type="submit">
