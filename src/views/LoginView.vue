@@ -12,13 +12,14 @@
         <input v-model="usuario.nombre" type="text" placeholder="Nombre" />
         <input v-model="usuario.apellido" type="text" placeholder="Apellido" />
         <input v-model="usuario.email" type="email" placeholder="Correo electrónico" />
+        <h5>* Campos obligatorios</h5>
         <p>Los datos personales solo se almacenan localmente</p>
       </div>
 
-      <p v-if="modoRegistro">* Campos obligatorios</p>
+      
 
       <!-- Botón principal -->
-      <button type="submit">
+      <button type="submit" class="submit">
         {{ modoRegistro ? "Registrar usuario" : "Iniciar sesión" }}
       </button>
     </form>
@@ -34,7 +35,7 @@
     <p v-if="mensaje" class="mensaje">{{ mensaje }}</p>
     <p v-if="error" class="error">{{ error }}</p>
 
-    <router-link to="/">Volver</router-link>
+    <router-link to="/" class="volver">Volver</router-link>
   </div>
 </template>
 
@@ -181,12 +182,15 @@ button:hover {
 }
 
 .modo-btn {
-  background-color: transparent;
-  color: #0288d1;
+   background-color: #03a9f4;
+  color: white;
   border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
   cursor: pointer;
-  font-weight: bold;
-  text-decoration: underline;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+  margin-top: 5px;
 }
 
 .error {
@@ -204,10 +208,26 @@ button:hover {
   font-size: 0.8em;
   color: #666;
   margin-top: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   background-color: #f4ff61;
   padding: 4px;
   margin: auto;
   margin-top: 10px;  
+}
+.registro-campos h5{
+  font-size: 0.9em;
+  color: #333;
+  margin-bottom: 10px;
+  margin-top: 10px;  
+} 
+.submit{
+  margin-top: 20px;
+}
+.volver{
+  display: inline-block;
+  margin-top: 15px;
+  color: #03a9f4;
+  text-decoration: none;
+  font-weight: bold;
 }
 </style>
