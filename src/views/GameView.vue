@@ -174,6 +174,11 @@ export default {
       let bonoDeTiempo = puntajeBase * Math.max(0, eficiencia) * FACTOR_BONO_PCT;
 
       this.puntuacionFinal = puntajeBase + bonoDeTiempo;
+
+      if (this.puntuacionFinal < 0 || isNaN(this.puntuacionFinal) || !isFinite(this.puntuacionFinal) || this.puntuacionFinal === undefined) {
+        this.puntuacionFinal = 0;
+      }
+
       console.log(this.puntuacionFinal)
       const nuevaPartida = {
         id: Date.now(),
