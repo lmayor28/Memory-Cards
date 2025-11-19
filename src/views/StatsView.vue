@@ -10,7 +10,7 @@
       <p><strong>Total de partidas:</strong> {{ usuarioActual.partidas.length }}</p>
       <p><strong>Promedio de aciertos:</strong> {{ promedioAciertos.toFixed(1) }}</p>
       <p><strong>Promedio de tiempo:</strong> {{ promedioTiempo.toFixed(1) }}s</p>
-      <p><strong>Mejor puntaje:</strong> {{ mejorPuntaje.toFixed(2) }}</p>
+      <p><strong>Mejor puntaje:</strong> {{ (Number(mejorPuntaje) || 0).toFixed(2) }}</p>
       <p><strong>Posición global:</strong> {{ posicionRanking }}</p>
         </div>
       <!-- 🆕 NUEVO: Tabla con el historial de partidas -->

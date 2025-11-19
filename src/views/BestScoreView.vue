@@ -16,7 +16,7 @@
         <tr v-for="(jugador, index) in topJugadores" :key="jugador.id">
           <td>{{ index + 1 }}</td>
           <td>{{ jugador.nombreUsuario }}</td>
-          <td>{{ jugador.mejorPuntaje.toFixed(2) }}</td>
+          <td>{{ (Number(jugador.mejorPuntaje) || 0).toFixed(2) }}</td>
           <td>{{ jugador.aciertos }}</td>
           <td>{{ jugador.tiempoFinal }}</td>
         </tr>
