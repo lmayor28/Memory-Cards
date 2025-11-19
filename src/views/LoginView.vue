@@ -91,8 +91,9 @@ export default {
         this.error = ''
 
         // Navegar al inicio
-        this.$router.push('/')
-        window.location.reload()
+
+        // Esto cambia la URL al home y fuerza la recarga del navegador
+        window.location.href = '/'
         return
       }
 
@@ -117,7 +118,6 @@ export default {
       if (existe) {
         this.error = 'El usuario o correo ya están registrados.'
         this.mensaje = ''
-        window.location.reload()
         return
       }
 
@@ -136,8 +136,9 @@ export default {
       this.mensaje = `¡Cuenta creada exitosamente! Bienvenido, ${nuevoUsuario.nombreUsuario}`
       this.error = ''
 
-      this.$router.push('/')
-      window.location.reload()
+
+      // Esto cambia la URL al home y fuerza la recarga del navegador
+      window.location.href = '/'
     }
   }
 }
@@ -208,6 +209,6 @@ button:hover {
   background-color: #f4ff61;
   padding: 4px;
   margin: auto;
-  margin-top: 10px;  
+  margin-top: 10px;
 }
 </style>
