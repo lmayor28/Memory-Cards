@@ -4,8 +4,8 @@
 
     <form @submit.prevent="manejarUsuario">
       <!-- Campos de datos -->
-      <input v-model="usuario.nombreUsuario" type="text" placeholder="Nombre de usuario *" required />
-      <input v-model="usuario.contraseña" type="password" placeholder="Contraseña *" required />
+      <input v-model="usuario.nombreUsuario" type="text" :placeholder="modoRegistro ? 'Nombre de usuario *' : 'Nombre de usuario'" required />
+      <input v-model="usuario.contraseña" type="password" :placeholder="modoRegistro ? 'Contraseña *' : 'Contraseña'" required />
 
       <!-- Campos extra solo al registrarse -->
       <div v-if="modoRegistro">
